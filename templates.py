@@ -16,17 +16,24 @@ except Exception as e:
 
 table_data = []
 
-# Assuming the endpoint returns a dictionary where each key is the template UUID
-if isinstance(data, dict):
+if isinstance(data, list):
+    for template_uuid in data:
+        detail_url = f"{XO_URL}/rest/v0/vm-templates/{template_uuid}"
+        detail_response = requests.get(detail_url, cookies=cookies)
+        if detail_response.status_code != 200:
+            print(f"Failed to get details for template {template_uuid}: {detail_response.status_code}")
+            continue
+        try:
+            details = detail_response.json()
+        except Exception as e:
+            print(f"Error decoding details for template {template_uuid}: {detail_response.text}")
+            continue
+        name = details.get("name_label", "N/A")
+        table_data.append([template_uuid, name])
+elif isinstance(data, dict):
     for template_uuid, details in data.items():
         name = details.get("name_label", "N/A")
         table_data.append([template_uuid, name])
-elif isinstance(data, list):
-    # Alternatively, if the endpoint returns a list of template objects
-    for item in data:
-        uuid = item.get("id", "N/A")
-        name = item.get("name_label", "N/A")
-        table_data.append([uuid, name])
 else:
     print("Unexpected data structure:", type(data))
     exit(1)
