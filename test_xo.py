@@ -118,20 +118,23 @@ def show_vms():
     else:
         print("No VM details available.")
 
-def attach_network(vm_id, network_id):
-    vif_create_url = f"{XO_URL}/rest/v0/vifs"
-    payload = {
+def attach_vif(vm_id, network_id):
+    vif_url = f"{XO_URL}/rest/v0/vifs"
+    vif_payload = {
+        "vm": vm_id,
         "network": network_id,
-        "vm": vm_id
+        "device": "0",  # Device index (usually 0 for the first interface)
+        "mac": "",  # Leave empty for auto-generated MAC
+        "mtu": 1500,  # Default MTU
+        "attached": True  # Auto-attach after creation
     }
     
-    response = requests.post(vif_create_url, json=payload, cookies=cookies)
-
-    print("Attach Network Status Code:", response.status_code)
-    try:
-        print("Attach Network Response:", response.json())
-    except Exception:
-        print("Error attaching network:", response.text)
+    response = requests.post(vif_url, json=vif_payload, cookies=cookies)
+    
+    if response.status_code == 201:
+        print(f"VIF successfully attached to VM {vm_id}.")
+    else:
+        print(f"Failed to attach VIF. Status Code: {response.status_code}, Response: {response.text}")
 
 
 
@@ -144,7 +147,7 @@ if __name__ == '__main__':
     
     if vm_id:
         network_id = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"  # CTF Subnet
-        attach_network(vm_id, network_id)  
+        attach_vif(vm_id,network_id)
         start_vm(vm_id)  
     else:
         print("VM creation failed.")
