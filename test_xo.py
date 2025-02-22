@@ -22,7 +22,11 @@ except requests.exceptions.JSONDecodeError:
 table_data = []
 
 for vm_id in vm_ids:
-    detail_url = f"{XO_URL}/rest/v0/vms/{vm_id}"
+    if isinstance(vm_id, str) and vm_id.startswith("/"):
+        detail_url = XO_URL + vm_id
+    else:
+        detail_url = f"{XO_URL}/rest/v0/vms/{vm_id}"
+    
     detail_response = requests.get(detail_url, cookies=cookies)
     
     if detail_response.status_code != 200:
