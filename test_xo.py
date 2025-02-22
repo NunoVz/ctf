@@ -45,7 +45,7 @@ def create_vm():
     return vm_id
 
 def start_vm(vm_id):
-    start_url = f"{XO_URL}/rest/v0/vms/{vm_id}/start"
+    start_url = f"{XO_URL}/rest/v0/vms/{vm_id}/actions/start"
     response = requests.post(start_url, cookies=cookies)
     print("Start VM Status Code:", response.status_code)
     try:
