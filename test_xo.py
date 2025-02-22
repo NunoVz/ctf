@@ -4,7 +4,7 @@ from tabulate import tabulate
 
 XO_URL = "http://xo-cslab.dei.uc.pt"
 pool_id = "6ddb8190-651e-f8ed-7fab-5e5a225857b7"
-token = "Aty79-OVxXiGY40-eCnWqq0YpeBsMZG-lZn73yec4H0"
+token = "cjnN9r5i88ZXzB-ffZXxh0uqpo4mSZ4Vj39GuFXZ4H4"
 cookies = {'authenticationToken': token}
 
 # Endpoint to create a VM in the pool using a template
