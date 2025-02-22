@@ -13,6 +13,7 @@ payload = {
     "name_label": "CAPTURE_THE_FLAG_TEST_SCRIPT",
     "name_description": "HEllo world!",
     "template": "2efd48d2-b12d-8f3e-56e6-5ed41c02118b", #CentOs
+    "vifs": [{"network": "ea5aca40-b7d2-b896-5efd-dce07151d4ba"}]
 }
 
 
@@ -118,23 +119,6 @@ def show_vms():
     else:
         print("No VM details available.")
 
-def attach_vif(vm_id, network_id):
-    vif_url = f"{XO_URL}/rest/v0/vifs"
-    vif_payload = {
-        "vm": vm_id,
-        "network": network_id,
-        "device": "0",  # Device index (usually 0 for the first interface)
-        "mac": "",  # Leave empty for auto-generated MAC
-        "mtu": 1500,  # Default MTU
-        "attached": True  # Auto-attach after creation
-    }
-    
-    response = requests.post(vif_url, json=vif_payload, cookies=cookies)
-    
-    if response.status_code == 201:
-        print(f"VIF successfully attached to VM {vm_id}.")
-    else:
-        print(f"Failed to attach VIF. Status Code: {response.status_code}, Response: {response.text}")
 
 
 
