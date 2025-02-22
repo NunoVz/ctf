@@ -4,7 +4,7 @@ from tabulate import tabulate
 
 XO_URL = "http://xo-cslab.dei.uc.pt"
 pool_id = "6ddb8190-651e-f8ed-7fab-5e5a225857b7"
-token = "cjnN9r5i88ZXzB-ffZXxh0uqpo4mSZ4Vj39GuFXZ4H4"
+token = "Aty79-OVxXiGY40-eCnWqq0YpeBsMZG-lZn73yec4H0"
 cookies = {'authenticationToken': token}
 
 # Endpoint to create a VM in the pool using a template
@@ -14,7 +14,7 @@ create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 payload = {
     "name_label": "CentOS_VM_Custom",
     "name_description": "A CentOS VM created via API based on the template",
-    "template": "ebe031e3-eefe-47a2-b99b-d29d150324e6"
+    "template": "6365ed62-0c96-2465-ea9c-a70ed9832200"
 }
 
 def create_vm():
