@@ -13,15 +13,6 @@ payload = {
     "name_label": "CAPTURE_THE_FLAG_TEST_SCRIPT",
     "name_description": "HEllo world!",
     "template": "2efd48d2-b12d-8f3e-56e6-5ed41c02118b", #CentOs
-    "network": {
-        "network": "ea5aca40-b7d2-b896-5efd-dce07151d4ba",  
-        "mode": "static",  
-        "ip": "192.168.1.100",  
-        "gateway": "192.168.1.1",  
-        "netmask": "255.255.255.0" 
-    }
-
-
 }
 
 
@@ -127,11 +118,27 @@ def show_vms():
     else:
         print("No VM details available.")
 
+def attach_network(vm_id, network_id):
+    network_attach_url = f"{XO_URL}/rest/v0/vms/{vm_id}/attach_network"
+    payload = {"network": network_id}
+    response = requests.post(network_attach_url, json=payload, cookies=cookies)
+
+    print("Attach Network Status Code:", response.status_code)
+    try:
+        print("Attach Network Response:", response.json())
+    except Exception:
+        print("Error attaching network:", response.text)
+
+
+
+
 if __name__ == '__main__':
     print("Existing VMs:")
     show_vms()
     print("\nCreating a new VM based on the template...")
     vm_id = create_vm()
+    attach_network(vm_id,"ea5aca40-b7d2-b896-5efd-dce07151d4ba")
+
     if vm_id:
         start_vm(vm_id)
     else:
