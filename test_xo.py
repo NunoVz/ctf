@@ -30,28 +30,19 @@ vm_id = None
 full_task_url = XO_URL + task_url  # Ensure we build the full URL
 
 while True:
-    task_response = requests.get(full_task_url, cookies=cookies)
-    if task_response.status_code != 200:
-        print("Error polling task:", task_response.status_code)
+    r = requests.get(full_task_url, cookies=cookies)
+    if r.status_code != 200:
+        print("Error polling task:", r.status_code)
         break
-    try:
-        task_data = task_response.json()
-    except Exception as e:
-        print("Error decoding task JSON:")
-        print(task_response.text)
+    task_data = r.json()
+    print("Task data:", task_data)
+    if task_data.get("status") == "Failure":
+        print("Task failed with error:", task_data.get("error"))
         break
-
-    status = task_data.get("status")
-    print("Task status:", status)
-    if status == "Success":
-        vm_id = task_data.get("result")
-        print("Task completed successfully. VM ID:", vm_id)
-        break
-    elif status == "Failure":
-        print("Task failed:", task_data)
+    elif task_data.get("status") == "Success":
+        print("Task succeeded with result:", task_data.get("result"))
         break
     else:
-        # Task is still running; wait a bit before polling again
         time.sleep(2)
 
 if not vm_id:
