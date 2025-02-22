@@ -1,5 +1,5 @@
 import requests
-
+from tabulate import tabulate 
 XO_URL = "http://xo-cslab.dei.uc.pt"
 
 # admin user
@@ -9,11 +9,16 @@ XO_URL = "http://xo-cslab.dei.uc.pt"
 token = "Aty79-OVxXiGY40-eCnWqq0YpeBsMZG-lZn73yec4H0"
 cookies = {'authenticationToken': token}
 
-# Get VMs
+# Get VMs from Xen Orchestra
 response = requests.get(f"{XO_URL}/rest/v0/vms", cookies=cookies)
-vm_list = response.json()
-for vm in vm_list:
-    print(f"VM ID: {vm.get('id')}")
-    print(f"Name: {vm.get('name_label')}")
-    print(f"Description: {vm.get('name_description')}")
-    print("-" * 20)
+vms = response.json()
+
+table_data = []
+for vm in vms:
+    vm_id = vm.get('id', 'N/A')
+    name = vm.get('name_label', 'N/A')
+    description = vm.get('name_description', 'N/A')
+    table_data.append([vm_id, name, description])
+
+
+print(tabulate(table_data, headers=["VM ID", "Name", "Description"], tablefmt="pretty"))
