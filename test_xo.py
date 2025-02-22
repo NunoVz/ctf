@@ -13,7 +13,7 @@ create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 # Payload with custom name, description, and the template UUID
 payload = {
     "name_label": "CTF_VM_TEST",
-    "name_description": "cmon man",
+    "name_description": "cmon man"
 }
 
 def create_vm():
