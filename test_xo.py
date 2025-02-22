@@ -12,7 +12,16 @@ create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 payload = {
     "name_label": "CAPTURE_THE_FLAG_TEST_SCRIPT",
     "name_description": "HEllo world!",
-    "template": "2efd48d2-b12d-8f3e-56e6-5ed41c02118b" #CentOs
+    "template": "2efd48d2-b12d-8f3e-56e6-5ed41c02118b", #CentOs
+    "network": {
+        "network": "ea5aca40-b7d2-b896-5efd-dce07151d4ba",  
+        "mode": "static",  
+        "ip": "192.168.1.100",  
+        "gateway": "192.168.1.1",  
+        "netmask": "255.255.255.0" 
+    }
+
+
 }
 
 
