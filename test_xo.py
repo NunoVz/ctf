@@ -12,12 +12,11 @@ create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 payload = {
     "name_label": "CTF_VM_TEST",
     "name_description": "cmon man",
-    "template": "6ddb8190-651e-f8ed-7fab-5e5a225857b7-2cf37285-57bc-4633-a24f-0c6c825dda66"
+    "template": "11fd3dc9-96cc-49af-b091-a2ca7e94c589" #CentOs
 }
 
 
 def create_vm():
-    # Send the request to create the VM
     create_response = requests.post(create_vm_url, json=payload, cookies=cookies)
     print("Create VM Status Code:", create_response.status_code)
     
