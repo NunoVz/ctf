@@ -12,7 +12,7 @@ create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 payload = {
     "name_label": "CAPTURE_THE_FLAG_TEST_SCRIPT",
     "name_description": "HEllo world!",
-    "template": "11fd3dc9-96cc-49af-b091-a2ca7e94c589" #CentOs
+    "template": "2efd48d2-b12d-8f3e-56e6-5ed41c02118b" #CentOs
 }
 
 
