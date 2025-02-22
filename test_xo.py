@@ -119,9 +119,13 @@ def show_vms():
         print("No VM details available.")
 
 def attach_network(vm_id, network_id):
-    network_attach_url = f"{XO_URL}/rest/v0/vms/{vm_id}/add_interface"
-    payload = {"network": network_id}
-    response = requests.post(network_attach_url, json=payload, cookies=cookies)
+    vif_create_url = f"{XO_URL}/rest/v0/vifs"
+    payload = {
+        "network": network_id,
+        "vm": vm_id
+    }
+    
+    response = requests.post(vif_create_url, json=payload, cookies=cookies)
 
     print("Attach Network Status Code:", response.status_code)
     try:
@@ -131,17 +135,19 @@ def attach_network(vm_id, network_id):
 
 
 
-
 if __name__ == '__main__':
     print("Existing VMs:")
     show_vms()
     print("\nCreating a new VM based on the template...")
+    
     vm_id = create_vm()
-    attach_network(vm_id,"ea5aca40-b7d2-b896-5efd-dce07151d4ba")
-
+    
     if vm_id:
-        start_vm(vm_id)
+        network_id = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"  # CTF Subnet
+        attach_network(vm_id, network_id)  
+        start_vm(vm_id)  
     else:
         print("VM creation failed.")
+
     print("\nUpdated VM List:")
     show_vms()
