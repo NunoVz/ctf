@@ -119,7 +119,7 @@ def show_vms():
         print("No VM details available.")
 
 def attach_network(vm_id, network_id):
-    network_attach_url = f"{XO_URL}/rest/v0/vms/{vm_id}/attach_network"
+    network_attach_url = f"{XO_URL}/rest/v0/vms/{vm_id}/add_interface"
     payload = {"network": network_id}
     response = requests.post(network_attach_url, json=payload, cookies=cookies)
 
