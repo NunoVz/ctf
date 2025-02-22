@@ -10,5 +10,10 @@ token = "Aty79-OVxXiGY40-eCnWqq0YpeBsMZG-lZn73yec4H0"
 cookies = {'authenticationToken': token}
 
 # Get VMs
-vm_response = requests.get(f"{XO_URL}/rest/v0/vms", cookies=cookies)
-print(vm_response.content)
+response = requests.get(f"{XO_URL}/rest/v0/vms", cookies=cookies)
+vm_list = response.json()
+for vm in vm_list:
+    print(f"VM ID: {vm.get('id')}")
+    print(f"Name: {vm.get('name_label')}")
+    print(f"Description: {vm.get('name_description')}")
+    print("-" * 20)
