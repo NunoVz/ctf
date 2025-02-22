@@ -10,8 +10,8 @@ cookies = {'authenticationToken': token}
 create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 
 payload = {
-    "name_label": "CTF_VM_TEST",
-    "name_description": "cmon man",
+    "name_label": "CAPTURE_THE_FLAG_TEST_SCRIPT",
+    "name_description": "HEllo world!",
     "template": "11fd3dc9-96cc-49af-b091-a2ca7e94c589" #CentOs
 }
 
@@ -47,11 +47,37 @@ def create_vm():
 def start_vm(vm_id):
     start_url = f"{XO_URL}/rest/v0/vms/{vm_id}/actions/start"
     response = requests.post(start_url, cookies=cookies)
+
     print("Start VM Status Code:", response.status_code)
-    try:
-        print("Start VM Response:", response.json())
-    except Exception as e:
-        print("Error starting VM:", response.text)
+
+    if response.status_code == 202:
+        task_url = XO_URL + response.text.strip() 
+        print("Polling task:", task_url)
+
+        while True:
+            task_response = requests.get(task_url, cookies=cookies)
+            if task_response.status_code != 200:
+                print("Error polling task:", task_response.status_code)
+                break
+
+            task_data = task_response.json()
+            print("Task data:", task_data)
+
+            status = task_data.get("status", "").lower()
+            if status == "failure":
+                print("Task failed with error:", task_data.get("error"))
+                break
+            elif status == "success":
+                print("VM successfully started!")
+                break
+            else:
+                time.sleep(2) 
+    else:
+        try:
+            print("Start VM Response:", response.json())
+        except Exception:
+            print("Error starting VM:", response.text)
+
 
 def show_vms():
     response = requests.get(f"{XO_URL}/rest/v0/vms", cookies=cookies)
