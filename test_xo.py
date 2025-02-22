@@ -7,14 +7,12 @@ pool_id = "6ddb8190-651e-f8ed-7fab-5e5a225857b7"
 token = "Aty79-OVxXiGY40-eCnWqq0YpeBsMZG-lZn73yec4H0"
 cookies = {'authenticationToken': token}
 
-# Endpoint to create a VM in the pool using a template
 create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 
-# Payload with custom name, description, and the template UUID
 payload = {
     "name_label": "CTF_VM_TEST",
     "name_description": "cmon man",
-    "template": "6ddb8190-651e-f8ed-7fab-5e5a225857b7-2cf37285-57bc-4633-a24f-0c6c825dda66"
+    "template": "/rest/v0/vm-templates/6ddb8190-651e-f8ed-7fab-5e5a225857b7-2cf37285-57bc-4633-a24f-0c6c825dda66"
 }
 
 def create_vm():
@@ -22,13 +20,11 @@ def create_vm():
     create_response = requests.post(create_vm_url, json=payload, cookies=cookies)
     print("Create VM Status Code:", create_response.status_code)
     
-    # The response returns a task URL (e.g., "/rest/v0/tasks/0m7gdc689")
     task_url = create_response.text.strip()
     print("Task URL:", task_url)
     
-    # Poll the task endpoint until it completes
     vm_id = None
-    full_task_url = XO_URL + task_url  # Build the full URL for the task
+    full_task_url = XO_URL + task_url  
     while True:
         r = requests.get(full_task_url, cookies=cookies)
         if r.status_code != 200:
@@ -49,7 +45,6 @@ def create_vm():
     return vm_id
 
 def start_vm(vm_id):
-    # Start the newly created VM
     start_url = f"{XO_URL}/rest/v0/vms/{vm_id}/start"
     response = requests.post(start_url, cookies=cookies)
     print("Start VM Status Code:", response.status_code)
@@ -103,7 +98,6 @@ if __name__ == '__main__':
     print("\nCreating a new VM based on the template...")
     vm_id = create_vm()
     if vm_id:
-        # Optionally, start the VM
         start_vm(vm_id)
     else:
         print("VM creation failed.")
