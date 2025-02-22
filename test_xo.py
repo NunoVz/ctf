@@ -1,35 +1,21 @@
 import requests
-from tabulate import tabulate 
+from tabulate import tabulate
+
 XO_URL = "http://xo-cslab.dei.uc.pt"
 pool_id = "6ddb8190-651e-f8ed-7fab-5e5a225857b7"
 
-# admin user
-# token = "cjnN9r5i88ZXzB-ffZXxh0uqpo4mSZ4Vj39GuFXZ4H4"
-
-# ctf user
+# ctf user token
 token = "Aty79-OVxXiGY40-eCnWqq0YpeBsMZG-lZn73yec4H0"
 cookies = {'authenticationToken': token}
 
-
-
+# Endpoint to create a VM in the pool
 create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 
+# Revised payload: only include allowed properties
 payload = {
     "name_label": "CTF_Script_Testing",
-    "name_description": "A VM created via API in a specific pool",
-    "template": "f13f9f69-28e4-43bf-a01a-ef9cd2fbae17",  # Ubuntu template UUID, for example
-    "start": False,  # Create without starting immediately; we start it later
-    "nics": [
-        {
-            "network": "ea5aca40-b7d2-b896-5efd-dce07151d4ba",  # <-- Replace with your actual subnetwork UUID
-            "ip_configuration": {
-                "static": True,
-                "ip": "192.168.1.100",      # Customize this IP as needed
-                "gateway": "192.168.1.1",     # Gateway for the subnetwork
-                "netmask": "255.255.255.0"    # Netmask for the subnetwork
-            }
-        }
-    ]
+    "name_description": "A VM created via API ",
+    "template": "f13f9f69-28e4-43bf-a01a-ef9cd2fbae17"  # Ubuntu template UUID
 }
 
 # Create the VM
@@ -45,7 +31,7 @@ except Exception as e:
     print(create_response.text)
     vm_id = None
 
-# Start the VM if it was created successfully
+# If VM creation was successful, start it
 if vm_id:
     start_url = f"{XO_URL}/rest/v0/vms/{vm_id}/start"
     start_response = requests.post(start_url, cookies=cookies)
