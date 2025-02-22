@@ -2,49 +2,58 @@ import requests
 from tabulate import tabulate
 
 XO_URL = "http://xo-cslab.dei.uc.pt"
-endpoint = "/rest/v0/vm-templates"
-url = XO_URL + endpoint
+TEMPLATES_ENDPOINT = "/rest/v0/vm-templates"
+NETWORKS_ENDPOINT = "/rest/v0/networks"
 token = "Aty79-OVxXiGY40-eCnWqq0YpeBsMZG-lZn73yec4H0"
 cookies = {'authenticationToken': token}
 
-# Request the list of VM templates
-response = requests.get(url, cookies=cookies)
-try:
-    data = response.json()
-except Exception as e:
-    print("Error decoding JSON:", response.text)
-    exit(1)
+# Function to fetch and process data from API
+def fetch_data(url):
+    response = requests.get(url, cookies=cookies)
+    try:
+        return response.json()
+    except Exception as e:
+        print(f"Error decoding JSON from {url}:", response.text)
+        return None
 
-table_data = []
+# Fetch VM Templates
+templates_url = XO_URL + TEMPLATES_ENDPOINT
+templates_data = fetch_data(templates_url)
+template_table = []
 
-# If data is a list of paths, process each template
-if isinstance(data, list):
-    for template_path in data:
-        detail_url = XO_URL + template_path  # Full URL to get template details
-        detail_response = requests.get(detail_url, cookies=cookies)
-        if detail_response.status_code != 200:
-            print(f"Failed to get details for template {template_path}: {detail_response.status_code}")
-            continue
-        try:
-            details = detail_response.json()
-        except Exception as e:
-            print(f"Error decoding details for template {template_path}: {detail_response.text}")
-            continue
-        # Get the name and extract the UUID from the path
+if isinstance(templates_data, list):
+    for template_path in templates_data:
+        detail_url = XO_URL + template_path
+        details = fetch_data(detail_url)
+        if details:
+            name = details.get("name_label", "N/A")
+            template_uuid = template_path.split('/')[-1]
+            template_table.append([template_uuid, name])
+elif isinstance(templates_data, dict):
+    for template_uuid, details in templates_data.items():
         name = details.get("name_label", "N/A")
-        template_uuid = template_path.split('/')[-1]
-        table_data.append([template_uuid, name])
-# Alternatively, if data is a dict, iterate over key-value pairs
-elif isinstance(data, dict):
-    for template_uuid, details in data.items():
-        name = details.get("name_label", "N/A")
-        table_data.append([template_uuid, name])
-else:
-    print("Unexpected data structure:", type(data))
-    exit(1)
+        template_table.append([template_uuid, name])
 
-# Print the results in a formatted table
-if table_data:
-    print(tabulate(table_data, headers=["Template UUID", "Name"], tablefmt="pretty"))
+# Fetch Networks
+networks_url = XO_URL + NETWORKS_ENDPOINT
+networks_data = fetch_data(networks_url)
+network_table = []
+
+if isinstance(networks_data, dict):
+    for network_uuid, details in networks_data.items():
+        name = details.get("name_label", "N/A")
+        description = details.get("description", "N/A")
+        network_table.append([network_uuid, name, description])
+
+# Print results
+if template_table:
+    print("VM Templates:")
+    print(tabulate(template_table, headers=["Template UUID", "Name"], tablefmt="pretty"))
 else:
-    print("No templates found.")
+    print("No VM templates found.")
+
+if network_table:
+    print("\nNetworks:")
+    print(tabulate(network_table, headers=["Network UUID", "Name", "Description"], tablefmt="pretty"))
+else:
+    print("No networks found.")
