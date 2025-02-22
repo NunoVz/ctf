@@ -7,27 +7,28 @@ pool_id = "6ddb8190-651e-f8ed-7fab-5e5a225857b7"
 token = "Aty79-OVxXiGY40-eCnWqq0YpeBsMZG-lZn73yec4H0"
 cookies = {'authenticationToken': token}
 
-# Endpoint to create a VM in the pool
+# Endpoint to create a VM in the pool using a template
 create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 
+# Payload with custom name, description, and the template UUID
 payload = {
-    "name_label": "My Custom VM",
-    "name_description": "This VM was created via API with a custom name and description",
-    "template": "f13f9f69-28e4-43bf-a01a-ef9cd2fbae17"  # Replace with your Ubuntu template UUID
+    "name_label": "CentOS_VM_Custom",
+    "name_description": "A CentOS VM created via API based on the template",
+    "template": "ebe031e3-eefe-47a2-b99b-d29d150324e6"
 }
 
 def create_vm():
-    # Send the create VM request
+    # Send the request to create the VM
     create_response = requests.post(create_vm_url, json=payload, cookies=cookies)
     print("Create VM Status Code:", create_response.status_code)
-
-    # The response returns a task URL (e.g., "/rest/v0/tasks/0m7gd9bte")
+    
+    # The response returns a task URL (e.g., "/rest/v0/tasks/0m7gdc689")
     task_url = create_response.text.strip()
     print("Task URL:", task_url)
-
-    # Poll the task endpoint until completion
+    
+    # Poll the task endpoint until it completes
     vm_id = None
-    full_task_url = XO_URL + task_url  # Build full URL for the task
+    full_task_url = XO_URL + task_url  # Build the full URL for the task
     while True:
         r = requests.get(full_task_url, cookies=cookies)
         if r.status_code != 200:
@@ -35,28 +36,27 @@ def create_vm():
             break
         task_data = r.json()
         print("Task data:", task_data)
-        if task_data.get("status") == "Failure":
+        status = task_data.get("status")
+        if status == "Failure":
             print("Task failed with error:", task_data.get("error"))
             break
-        elif task_data.get("status") == "Success":
-            # The 'result' field should contain the new VM's ID
+        elif status == "Success":
             vm_id = task_data.get("result")
             print("Task succeeded. VM ID:", vm_id)
             break
         else:
             time.sleep(2)
+    return vm_id
 
-    if not vm_id:
-        print("VM was not created successfully; cannot start VM.")
-    else:
-        # Start the newly created VM
-        start_url = f"{XO_URL}/rest/v0/vms/{vm_id}/start"
-        start_response = requests.post(start_url, cookies=cookies)
-        print("Start VM Status Code:", start_response.status_code)
-        try:
-            print("Start VM Response:", start_response.json())
-        except Exception as e:
-            print("Error starting VM:", start_response.text)
+def start_vm(vm_id):
+    # Start the newly created VM
+    start_url = f"{XO_URL}/rest/v0/vms/{vm_id}/start"
+    response = requests.post(start_url, cookies=cookies)
+    print("Start VM Status Code:", response.status_code)
+    try:
+        print("Start VM Response:", response.json())
+    except Exception as e:
+        print("Error starting VM:", response.text)
 
 def show_vms():
     response = requests.get(f"{XO_URL}/rest/v0/vms", cookies=cookies)
@@ -98,7 +98,14 @@ def show_vms():
         print("No VM details available.")
 
 if __name__ == '__main__':
-    print("Creating a custom VM...")
-    create_vm()
-    print("\nCurrent VMs:")
+    print("Existing VMs:")
+    show_vms()
+    print("\nCreating a new VM based on the template...")
+    vm_id = create_vm()
+    if vm_id:
+        # Optionally, start the VM
+        start_vm(vm_id)
+    else:
+        print("VM creation failed.")
+    print("\nUpdated VM List:")
     show_vms()
