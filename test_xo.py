@@ -14,7 +14,7 @@ create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 payload = {
     "name_label": "CTF_VM_TEST",
     "name_description": "cmon man",
-    "template": "6365ed62-0c96-2465-ea9c-a70ed9832200"
+    "template": "6ddb8190-651e-f8ed-7fab-5e5a225857b7-2cf37285-57bc-4633-a24f-0c6c825dda66"
 }
 
 def create_vm():
