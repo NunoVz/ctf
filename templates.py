@@ -7,7 +7,6 @@ NETWORKS_ENDPOINT = "/rest/v0/networks"
 token = "Aty79-OVxXiGY40-eCnWqq0YpeBsMZG-lZn73yec4H0"
 cookies = {'authenticationToken': token}
 
-# Function to fetch and process data from API
 def fetch_data(url):
     response = requests.get(url, cookies=cookies)
     try:
@@ -16,7 +15,6 @@ def fetch_data(url):
         print(f"Error decoding JSON from {url}:", response.text)
         return None
 
-# Fetch VM Templates
 templates_url = XO_URL + TEMPLATES_ENDPOINT
 templates_data = fetch_data(templates_url)
 template_table = []
@@ -34,18 +32,25 @@ elif isinstance(templates_data, dict):
         name = details.get("name_label", "N/A")
         template_table.append([template_uuid, name])
 
-# Fetch Networks
 networks_url = XO_URL + NETWORKS_ENDPOINT
 networks_data = fetch_data(networks_url)
 network_table = []
 
-if isinstance(networks_data, dict):
+if isinstance(networks_data, list):
+    for network_path in networks_data:
+        detail_url = XO_URL + network_path
+        details = fetch_data(detail_url)
+        if details:
+            name = details.get("name_label", "N/A")
+            description = details.get("name_description", "N/A")
+            network_uuid = details.get("uuid", "N/A")
+            network_table.append([network_uuid, name, description])
+elif isinstance(networks_data, dict):
     for network_uuid, details in networks_data.items():
         name = details.get("name_label", "N/A")
-        description = details.get("description", "N/A")
+        description = details.get("name_description", "N/A")
         network_table.append([network_uuid, name, description])
 
-# Print results
 if template_table:
     print("VM Templates:")
     print(tabulate(template_table, headers=["Template UUID", "Name"], tablefmt="pretty"))
