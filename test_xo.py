@@ -33,10 +33,10 @@ def create_vm():
         task_data = r.json()
         print("Task data:", task_data)
         status = task_data.get("status")
-        if status == "Failure":
+        if status.lower() == "failure":
             print("Task failed with error:", task_data.get("error"))
             break
-        elif status == "Success":
+        elif status.lower() == "success":
             vm_id = task_data.get("result")
             print("Task succeeded. VM ID:", vm_id)
             break
