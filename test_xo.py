@@ -10,86 +10,95 @@ cookies = {'authenticationToken': token}
 # Endpoint to create a VM in the pool
 create_vm_url = f"{XO_URL}/rest/v0/pools/{pool_id}/actions/create_vm"
 
-# Basic payload with allowed properties
 payload = {
-    "name_label": "CTF_Script_Testing",
-    "name_description": "A VM created via API in a specific pool",
-    "template": "f13f9f69-28e4-43bf-a01a-ef9cd2fbae17"  # Ubuntu template UUID
+    "name_label": "My Custom VM",
+    "name_description": "This VM was created via API with a custom name and description",
+    "template": "f13f9f69-28e4-43bf-a01a-ef9cd2fbae17"  # Replace with your Ubuntu template UUID
 }
 
-# Create the VM
-create_response = requests.post(create_vm_url, json=payload, cookies=cookies)
-print("Create VM Status Code:", create_response.status_code)
+def create_vm():
+    # Send the create VM request
+    create_response = requests.post(create_vm_url, json=payload, cookies=cookies)
+    print("Create VM Status Code:", create_response.status_code)
 
-# The response should be a task URL (e.g., "/rest/v0/tasks/0m7gd63lh")
-task_url = create_response.text.strip()
-print("Task URL:", task_url)
+    # The response returns a task URL (e.g., "/rest/v0/tasks/0m7gd9bte")
+    task_url = create_response.text.strip()
+    print("Task URL:", task_url)
 
-# Poll the task endpoint until the task completes
-vm_id = None
-full_task_url = XO_URL + task_url  # Ensure we build the full URL
+    # Poll the task endpoint until completion
+    vm_id = None
+    full_task_url = XO_URL + task_url  # Build full URL for the task
+    while True:
+        r = requests.get(full_task_url, cookies=cookies)
+        if r.status_code != 200:
+            print("Error polling task:", r.status_code)
+            break
+        task_data = r.json()
+        print("Task data:", task_data)
+        if task_data.get("status") == "Failure":
+            print("Task failed with error:", task_data.get("error"))
+            break
+        elif task_data.get("status") == "Success":
+            # The 'result' field should contain the new VM's ID
+            vm_id = task_data.get("result")
+            print("Task succeeded. VM ID:", vm_id)
+            break
+        else:
+            time.sleep(2)
 
-while True:
-    r = requests.get(full_task_url, cookies=cookies)
-    if r.status_code != 200:
-        print("Error polling task:", r.status_code)
-        break
-    task_data = r.json()
-    print("Task data:", task_data)
-    if task_data.get("status") == "Failure":
-        print("Task failed with error:", task_data.get("error"))
-        break
-    elif task_data.get("status") == "Success":
-        print("Task succeeded with result:", task_data.get("result"))
-        break
+    if not vm_id:
+        print("VM was not created successfully; cannot start VM.")
     else:
-        time.sleep(2)
+        # Start the newly created VM
+        start_url = f"{XO_URL}/rest/v0/vms/{vm_id}/start"
+        start_response = requests.post(start_url, cookies=cookies)
+        print("Start VM Status Code:", start_response.status_code)
+        try:
+            print("Start VM Response:", start_response.json())
+        except Exception as e:
+            print("Error starting VM:", start_response.text)
 
-if not vm_id:
-    print("VM was not created successfully; cannot start VM.")
-else:
-    # Start the VM if creation was successful
-    start_url = f"{XO_URL}/rest/v0/vms/{vm_id}/start"
-    start_response = requests.post(start_url, cookies=cookies)
-    print("Start VM Status Code:", start_response.status_code)
+def show_vms():
+    response = requests.get(f"{XO_URL}/rest/v0/vms", cookies=cookies)
     try:
-        print("Start VM Response:", start_response.json())
-    except Exception as e:
-        print("Error starting VM:", start_response.text)
-
-# Retrieve and display the list of VMs for verification
-response = requests.get(f"{XO_URL}/rest/v0/vms", cookies=cookies)
-try:
-    vm_ids = response.json()
-except requests.exceptions.JSONDecodeError:
-    print("Failed to decode JSON from the VM list response.")
-    print("Response content:", response.text)
-    vm_ids = []
-
-table_data = []
-for vm_id in vm_ids:
-    if isinstance(vm_id, str) and vm_id.startswith("/"):
-        detail_url = XO_URL + vm_id
-    else:
-        detail_url = f"{XO_URL}/rest/v0/vms/{vm_id}"
-    
-    detail_response = requests.get(detail_url, cookies=cookies)
-    if detail_response.status_code != 200:
-        print(f"Failed to get details for VM ID {vm_id}. Status code: {detail_response.status_code}")
-        print("Response content:", detail_response.text)
-        continue
-    try:
-        vm_details = detail_response.json()
+        data = response.json()
     except requests.exceptions.JSONDecodeError:
-        print(f"Error decoding JSON for VM ID {vm_id}.")
-        print("Response content:", detail_response.text)
-        continue
+        print("Failed to decode JSON from the VM list response.")
+        print("Response content:", response.text)
+        data = {}
+    
+    table_data = []
+    if isinstance(data, dict):
+        for vm_id, details in data.items():
+            name = details.get('name_label', 'N/A')
+            description = details.get('name_description', 'N/A')
+            table_data.append([vm_id, name, description])
+    elif isinstance(data, list):
+        for vm_id in data:
+            if isinstance(vm_id, str) and vm_id.startswith("/"):
+                detail_url = XO_URL + vm_id
+            else:
+                detail_url = f"{XO_URL}/rest/v0/vms/{vm_id}"
+            detail_response = requests.get(detail_url, cookies=cookies)
+            if detail_response.status_code != 200:
+                continue
+            try:
+                details = detail_response.json()
+            except requests.exceptions.JSONDecodeError:
+                continue
+            name = details.get('name_label', 'N/A')
+            description = details.get('name_description', 'N/A')
+            table_data.append([vm_id, name, description])
+    else:
+        print("Unexpected data structure:", type(data))
+    
+    if table_data:
+        print(tabulate(table_data, headers=["VM ID", "Name", "Description"], tablefmt="pretty"))
+    else:
+        print("No VM details available.")
 
-    name = vm_details.get('name_label', 'N/A')
-    description = vm_details.get('name_description', 'N/A')
-    table_data.append([vm_id, name, description])
-
-if table_data:
-    print(tabulate(table_data, headers=["VM ID", "Name", "Description"], tablefmt="pretty"))
-else:
-    print("No VM details available.")
+if __name__ == '__main__':
+    print("Creating a custom VM...")
+    create_vm()
+    print("\nCurrent VMs:")
+    show_vms()
