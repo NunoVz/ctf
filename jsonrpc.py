@@ -74,8 +74,7 @@ async def get_all_vms(ws):
         table_data = []
         for vm_id, details in vms.items():
             name = details.get("name_label", "N/A")
-            description = details.get("name_description", "N/A")
-            table_data.append([vm_id, name, description])
+            table_data.append([vm_id, name])
         if table_data:
             print(tabulate(table_data, headers=["VM ID", "Name"], tablefmt="pretty"))
         else:
