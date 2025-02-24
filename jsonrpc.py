@@ -9,7 +9,7 @@ username = "ctf"
 password = "cslabctf2024"
 template_id = "2efd48d2-b12d-8f3e-56e6-5ed41c02118b"  # Must be a template that supports Cloud‑Init
 network_uuid = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"   #CTF-Subnet
-default_vm_description = "Created via CLI with static IP via Cloud-Init"
+default_vm_description = "Created for Shift CTF! Make the flag (h)appen"
 
 def generate_cloud_config(ip, hostname):
     """
