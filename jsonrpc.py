@@ -113,14 +113,18 @@ async def main():
         async with session.ws_connect(XO_WS_URL) as ws:
             # Sign in to the XO server
             await sign_in(ws)
+            print("\nExisting VMs:")
+            await get_all_vms(ws)
 
-            get_all_vms(ws)
             # Create the VM with static IP settings
-#            vm_id = await create_vm_static(ws)
- #           if vm_id:
-  #              print("VM created with id:", vm_id)
-   #         else:
-    #            print("VM creation failed.")
+            vm_id = await create_vm_static(ws)
+            if vm_id:
+                print("VM created with id:", vm_id)
+            else:
+                print("VM creation failed.")
+
+            print("\nUpdated VM List:")
+            await get_all_vms(ws)
 
 if __name__ == "__main__":
     asyncio.run(main())
