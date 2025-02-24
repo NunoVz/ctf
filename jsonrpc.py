@@ -95,7 +95,7 @@ async def create_vm_static(ws):
     return None
 async def get_all_vms(ws):
     print("Fetching list of VMs...")
-    response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": "host"}})
+    response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": "VM"}})
     if "result" in response:
         vms = response["result"]
         table_data = []
