@@ -23,16 +23,12 @@ async def show_vms(server):
         print("No VMs found.")
 
 async def create_vm(server):
-    payload = {"vm": 
-                {
-                "name_label": "...",
-                "template": "...",
-                "name_description": "...",
-                "pool": pool_id,
-                }
-            }
-
-    
+    payload = {
+        "pool": pool_id,
+        "name_label": vm_name,
+        "name_description": vm_description,
+        "template": template_id,
+    }
     print("Creating a new VM based on the template...")
 
     vm_id = await server.vm.create(payload)
