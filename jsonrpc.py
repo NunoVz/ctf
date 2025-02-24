@@ -92,6 +92,21 @@ async def create_vm_static(ws):
     if "result" in response:
         return response["result"]
     return None
+async def get_all_vms(ws):
+    print("Fetching list of VMs...")
+    response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": "host"}})
+    if "result" in response:
+        vms = response["result"]
+        table_data = []
+        for vm_id, details in vms.items():
+            name = details.get("name_label", "N/A")
+            table_data.append([vm_id, name])
+        if table_data:
+            print(tabulate(table_data, headers=["VM ID", "Name"], tablefmt="pretty"))
+        else:
+            print("No VMs found.")
+    else:
+        print("Failed to fetch VMs. Response:", response)
 
 async def main():
     async with aiohttp.ClientSession() as session:
@@ -99,8 +114,7 @@ async def main():
             # Sign in to the XO server
             await sign_in(ws)
 
-            hosts = await server.xo.getAllObjects(filter={"type": "host"})
-            print(hosts)
+            get_all_vms(ws)
             # Create the VM with static IP settings
 #            vm_id = await create_vm_static(ws)
  #           if vm_id:
