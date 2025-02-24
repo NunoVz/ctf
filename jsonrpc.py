@@ -18,20 +18,15 @@ async def show_vms(server):
         description = details.get("name_description", "N/A")
         table_data.append([vm_id, name, description])
     if table_data:
-        print(vms)
+        print(tabulate(table_data, headers=["VM ID", "Name", "Description"], tablefmt="pretty"))
     else:
         print("No VMs found.")
 
 async def create_vm(server):
-    payload = {
-        'pool': pool_id,
-        'name_label': vm_name,
-        'name_description': vm_description,
-        'template': template_id,
-    }
+
     print("Creating a new VM based on the template...")
 
-    vm_id = await server.vm.create(payload)
+    vm_id = await server.vm.create(pool=pool_id, name_label=vm_name, name_description=vm_description, template=template_id)
     print("VM creation initiated. Returned VM identifier:", vm_id)
     return vm_id
 
