@@ -119,9 +119,8 @@ async def run_create_team_interactive(num_teams):
             await sign_in(ws)
             for team in range(1, num_teams + 1):
                 # Create 5 VMs per team.
-                for i in range(5):
+                for i in range(2):
                     vm_name = f"CTF-TEAM-{team}-TEST-{i+1}"
-                    # For team X, the first VM gets IP 192.168.X.100, then .101, etc.
                     ip = f"192.168.{team}.{100 + i}"
                     vm_id = await create_vm_static(ws, vm_name, ip)
                     if vm_id:
@@ -143,7 +142,7 @@ def interactive_cli():
     print("Welcome to XO CLI")
     print("Select an option:")
     print("1. List objects (e.g., VM, host, network)")
-    print("2. Create team VMs (5 VMs per team)")
+    print("2. Create team VMs (ex:5 teams creates 2 VMs per team = 10 VMs)")
     print("3. Create a single VM")
     choice = input("Enter your choice (1/2/3): ").strip()
 
