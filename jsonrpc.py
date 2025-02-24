@@ -11,7 +11,7 @@ password = "cslabctf2024"
 
 # VM creation parameters
 pool_id = "6ddb8190-651e-f8ed-7fab-5e5a225857b7"
-template_id = "17a818b5-20a6-4d34-a7ef-320da9ef4c14 "   # Must be a template that supports Cloud‑Init
+template_id = "17a818b5-20a6-4d34-a7ef-320da9ef4c14"   # Must be a template that supports Cloud‑Init
 host_uuid = "8cc792b1-d2c1-4a23-bd33-291d006cf7f5"         # Replace with the actual host UUID
 network_uuid = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"   
 vm_name = "CTF SCRIPT TEST NETWORK"
