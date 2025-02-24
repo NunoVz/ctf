@@ -50,15 +50,11 @@ async def sign_in(ws):
     return response
 
 async def create_vm(ws):
-    # Build the vm.create call, with parameters similar to:
-    # signIn.getParams().put("name_label", "CAPTURE_THE_FLAG_TEST_SCRIPT");
-    # signIn.getParams().put("template", "template_id"); etc.
     params = {
         "pool": pool_id,
         "name_label": vm_name,
         "name_description": vm_description,
         "template": template_id
-        # Add additional vm.create parameters here as needed.
     }
     print("Creating a new VM using vm.create...")
     response = await send_rpc(ws, "vm.create", params)
@@ -72,7 +68,6 @@ async def start_vm(ws, vm_id):
 
 async def get_all_vms(ws):
     print("Fetching list of VMs...")
-    # Here we assume xo.getAllObjects returns a dict of objects
     response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": "VM"}})
     if "result" in response:
         vms = response["result"]
@@ -82,7 +77,7 @@ async def get_all_vms(ws):
             description = details.get("name_description", "N/A")
             table_data.append([vm_id, name, description])
         if table_data:
-            print(tabulate(table_data, headers=["VM ID", "Name", "Description"], tablefmt="pretty"))
+            print(tabulate(table_data, headers=["VM ID", "Name"], tablefmt="pretty"))
         else:
             print("No VMs found.")
     else:
