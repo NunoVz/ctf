@@ -4,11 +4,9 @@ import websocket
 USERNAME = "cslab"
 PASSWORD = "cslabctf2024"
 
-# Global websocket instance (will be set on connection)
 ws_instance = None
 
 def send_rpc(method, params, rpc_id):
-    """Helper to send a JSON-RPC message over the WebSocket."""
     payload = {
         "jsonrpc": "2.0",
         "method": method,
@@ -27,19 +25,16 @@ def on_message(ws, message):
         print("Error parsing JSON:", e)
         return
 
-    # Check which call this response belongs to
     rpc_id = response.get("id")
     if rpc_id == 1:
-        # Login response
         token = response.get("result")
         if token:
             print("Login successful, token:", token)
-            # Once logged in, request the list of VMs.
+            # Now request the list of VMs.
             send_rpc("vm.getAll", {}, 2)
         else:
             print("Login failed, response:", response)
     elif rpc_id == 2:
-        # vm.getAll response
         vms = response.get("result")
         print("\nList of VMs:")
         if isinstance(vms, list):
@@ -61,14 +56,21 @@ def on_close(ws, close_status_code, close_msg):
 
 def on_open(ws):
     print("WebSocket connection opened.")
-    # Send the login JSON-RPC request.
+    # Send the login request.
     send_rpc("session.login_with_password", {"username": USERNAME, "password": PASSWORD}, 1)
 
 if __name__ == "__main__":
-    websocket.enableTrace(True)
-    # Use the secure WebSocket endpoint. Adjust scheme (wss vs. ws) as needed.
-    ws_url = "wss://xo-cslab.dei.uc.pt/jsonrpc"
-    ws_instance = websocket.WebSocketApp(ws_url,
+    # Optionally enable trace for debugging.
+    try:
+        websocket.enableTrace(True)
+    except AttributeError:
+        print("Trace not available; ensure 'websocket-client' is installed.")
+
+    # Try the endpoint as suggested by the tutorial.
+    # If wss://xo-cslab.dei.uc.pt/jsonrpc fails (connection refused),
+    # try the socket.io endpoint.
+    WS_URL = "wss://xo-cslab.dei.uc.pt/socket.io/?EIO=3&transport=websocket"
+    ws_instance = websocket.WebSocketApp(WS_URL,
                                           on_open=on_open,
                                           on_message=on_message,
                                           on_error=on_error,
