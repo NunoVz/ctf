@@ -1,0 +1,3962 @@
+{
+  "acl.get": {
+    "description": "get existing ACLs",
+    "params": {},
+    "permission": "admin"
+  },
+  "acl.getCurrentPermissions": {
+    "description": "get (explicit) permissions by object for the current user",
+    "params": {},
+    "permission": ""
+  },
+  "acl.add": {
+    "description": "add a new ACL entry",
+    "params": {
+      "subject": {
+        "type": "string"
+      },
+      "object": {
+        "type": "string"
+      },
+      "action": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "acl.remove": {
+    "description": "remove an existing ACL entry",
+    "params": {
+      "subject": {
+        "type": "string"
+      },
+      "object": {
+        "type": "string"
+      },
+      "action": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.createJob": {
+    "params": {
+      "compression": {
+        "enum": [
+          "",
+          "native",
+          "zstd"
+        ],
+        "optional": true
+      },
+      "mode": {
+        "enum": [
+          "full",
+          "delta"
+        ]
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "proxy": {
+        "type": "string",
+        "optional": true
+      },
+      "remotes": {
+        "type": "object",
+        "optional": true
+      },
+      "schedules": {
+        "type": "object",
+        "optional": true
+      },
+      "settings": {
+        "type": "object"
+      },
+      "srs": {
+        "type": "object",
+        "optional": true
+      },
+      "vms": {
+        "type": "object"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.migrateLegacyJob": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.deleteJob": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.editJob": {
+    "params": {
+      "compression": {
+        "enum": [
+          "",
+          "native",
+          "zstd"
+        ],
+        "optional": true
+      },
+      "id": {
+        "type": "string"
+      },
+      "mode": {
+        "enum": [
+          "full",
+          "delta"
+        ],
+        "optional": true
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "proxy": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "remotes": {
+        "type": "object",
+        "optional": true
+      },
+      "settings": {
+        "type": "object",
+        "optional": true
+      },
+      "srs": {
+        "type": "object",
+        "optional": true
+      },
+      "vms": {
+        "type": "object",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.getAllJobs": {
+    "params": {},
+    "permission": "admin"
+  },
+  "backupNg.getJob": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.runJob": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "schedule": {
+        "type": "string"
+      },
+      "settings": {
+        "type": "object",
+        "properties": {
+          "*": {
+            "type": "object"
+          }
+        },
+        "optional": true
+      },
+      "vm": {
+        "type": "string",
+        "optional": true
+      },
+      "vms": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.getAllLogs": {
+    "params": {
+      "ndjson": {
+        "type": "boolean",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.getLogs": {
+    "params": {
+      "after": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "optional": true
+      },
+      "before": {
+        "type": [
+          "number",
+          "string"
+        ],
+        "optional": true
+      },
+      "limit": {
+        "type": "number",
+        "optional": true
+      },
+      "*": {
+        "type": "any"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.deleteVmBackup": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.listVmBackups": {
+    "params": {
+      "_forceRefresh": {
+        "type": "boolean",
+        "optional": true
+      },
+      "remotes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.importVmBackup": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "sr": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.listPartitions": {
+    "params": {
+      "disk": {
+        "type": "string"
+      },
+      "remote": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.listFiles": {
+    "params": {
+      "disk": {
+        "type": "string"
+      },
+      "partition": {
+        "type": "string",
+        "optional": true
+      },
+      "path": {
+        "type": "string"
+      },
+      "remote": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backupNg.fetchFiles": {
+    "params": {
+      "disk": {
+        "type": "string"
+      },
+      "partition": {
+        "optional": true,
+        "type": "string"
+      },
+      "paths": {
+        "items": {
+          "type": "string"
+        },
+        "minLength": 1,
+        "type": "array"
+      },
+      "remote": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backup.list": {
+    "params": {
+      "remote": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backup.scanDisk": {
+    "params": {
+      "remote": {
+        "type": "string"
+      },
+      "disk": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backup.scanFiles": {
+    "params": {
+      "remote": {
+        "type": "string"
+      },
+      "disk": {
+        "type": "string"
+      },
+      "partition": {
+        "type": "string",
+        "optional": true
+      },
+      "path": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "backup.fetchFiles": {
+    "params": {
+      "remote": {
+        "type": "string"
+      },
+      "disk": {
+        "type": "string"
+      },
+      "format": {
+        "type": "string",
+        "optional": true
+      },
+      "partition": {
+        "type": "string",
+        "optional": true
+      },
+      "paths": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minLength": 1
+      }
+    },
+    "permission": "admin"
+  },
+  "group.create": {
+    "description": "creates a new group",
+    "params": {
+      "name": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "group.delete": {
+    "description": "deletes an existing group",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "group.getAll": {
+    "description": "returns all the existing group",
+    "params": {},
+    "permission": "admin"
+  },
+  "group.setUsers": {
+    "description": "sets the users belonging to a group",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "userIds": {}
+    },
+    "permission": "admin"
+  },
+  "group.addUser": {
+    "description": "adds a user to a group",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "userId": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "group.removeUser": {
+    "description": "removes a user from a group",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "userId": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "group.set": {
+    "description": "changes the properties of an existing group",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "host.set": {
+    "description": "changes the properties of an host",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "iscsiIqn": {
+        "type": "string",
+        "optional": true
+      },
+      "name_label": {
+        "type": "string",
+        "optional": true
+      },
+      "name_description": {
+        "type": "string",
+        "optional": true
+      },
+      "multipathing": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "host.restart": {
+    "description": "restart the host",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "force": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "host.restartAgent": {
+    "description": "restart the Xen agent on the host",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "host.restart_agent": {
+    "description": "restart the Xen agent on the host",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "host.setRemoteSyslogHost": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "syslogDestination": {
+        "type": "string"
+      }
+    }
+  },
+  "host.start": {
+    "description": "start the host",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "host.stop": {
+    "description": "stop the host",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "host.detach": {
+    "description": "eject the host of a pool",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "host.enable": {
+    "description": "enable to create VM on the host",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "host.disable": {
+    "description": "disable to create VM on the hsot",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "host.forget": {
+    "description": "remove the host record from XAPI database",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "host.emergencyShutdownHost": {
+    "description": "suspend all VMs and shutdown host",
+    "params": {
+      "host": {
+        "type": "string"
+      }
+    }
+  },
+  "host.isHostServerTimeConsistent": {
+    "params": {
+      "host": {
+        "type": "string"
+      }
+    }
+  },
+  "host.stats": {
+    "description": "returns statistic of the host",
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "granularity": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "host.installSupplementalPack": {
+    "description": "installs supplemental pack from ISO file",
+    "params": {
+      "host": {
+        "type": "string"
+      }
+    }
+  },
+  "host.isHyperThreadingEnabled": {
+    "description": "get hyper-threading information",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "ipPool.create": {
+    "description": "Creates a new ipPool",
+    "params": {},
+    "permission": "admin"
+  },
+  "ipPool.delete": {
+    "description": "Delete an ipPool",
+    "params": {},
+    "permission": "admin"
+  },
+  "ipPool.getAll": {
+    "description": "List all ipPools",
+    "params": {},
+    "permission": ""
+  },
+  "ipPool.set": {
+    "description": "Allow to modify an existing ipPool",
+    "params": {},
+    "permission": "admin"
+  },
+  "job.cancel": {
+    "description": "Cancel a current run",
+    "params": {},
+    "permission": "admin"
+  },
+  "job.getAll": {
+    "description": "Gets all available jobs",
+    "params": {},
+    "permission": "admin"
+  },
+  "job.get": {
+    "description": "Gets an existing job",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "job.create": {
+    "description": "Creates a new job from description object",
+    "params": {
+      "job": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "optional": true
+          },
+          "name": {
+            "type": "string",
+            "optional": true
+          },
+          "timeout": {
+            "type": "number",
+            "optional": true
+          },
+          "type": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "paramsVector": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "permission": "admin"
+  },
+  "job.set": {
+    "description": "Modifies an existing job from a description object",
+    "params": {
+      "job": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "optional": true
+          },
+          "timeout": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "optional": true
+          },
+          "type": {
+            "type": "string",
+            "optional": true
+          },
+          "key": {
+            "type": "string",
+            "optional": true
+          },
+          "method": {
+            "type": "string",
+            "optional": true
+          },
+          "paramsVector": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "optional": true
+          }
+        }
+      }
+    },
+    "permission": "admin"
+  },
+  "job.delete": {
+    "description": "Deletes an existing job",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "job.runSequence": {
+    "description": "Runs jobs sequentially, in the provided order",
+    "params": {
+      "idSequence": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "permission": "admin"
+  },
+  "log.get": {
+    "description": "returns logs list for one namespace",
+    "params": {
+      "namespace": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "log.delete": {
+    "description": "deletes one or several logs from a namespace",
+    "params": {
+      "id": {
+        "type": [
+          "array",
+          "string"
+        ]
+      },
+      "namespace": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "message.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "metadataBackup.createJob": {
+    "params": {
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "pools": {
+        "type": "object",
+        "optional": true
+      },
+      "remotes": {
+        "type": "object"
+      },
+      "schedules": {
+        "type": "object"
+      },
+      "settings": {
+        "type": "object"
+      },
+      "xoMetadata": {
+        "type": "boolean",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "metadataBackup.getAllJobs": {
+    "params": {},
+    "permission": "admin"
+  },
+  "metadataBackup.getJob": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "metadataBackup.deleteJob": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "metadataBackup.editJob": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "pools": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "optional": true
+      },
+      "settings": {
+        "type": "object",
+        "optional": true
+      },
+      "remotes": {
+        "type": "object",
+        "optional": true
+      },
+      "xoMetadata": {
+        "type": "boolean",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "metadataBackup.runJob": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "schedule": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "metadataBackup.list": {
+    "params": {
+      "remotes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "permission": "admin"
+  },
+  "metadataBackup.restore": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "metadataBackup.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "network.getBondModes": {
+    "params": {}
+  },
+  "network.create": {
+    "params": {
+      "pool": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string",
+        "optional": true
+      },
+      "pif": {
+        "type": "string",
+        "optional": true
+      },
+      "mtu": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      },
+      "vlan": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "network.createBonded": {
+    "description": "Create a bonded network. bondMode can be balance-slb, active-backup or lacp",
+    "params": {
+      "pool": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string",
+        "optional": true
+      },
+      "pifs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "mtu": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      },
+      "bondMode": {
+        "type": "string",
+        "pattern": {}
+      }
+    },
+    "permission": "admin"
+  },
+  "network.set": {
+    "params": {
+      "automatic": {
+        "type": "boolean",
+        "optional": true
+      },
+      "defaultIsLocked": {
+        "type": "boolean",
+        "optional": true
+      },
+      "id": {
+        "type": "string"
+      },
+      "name_description": {
+        "type": "string",
+        "optional": true
+      },
+      "name_label": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "network.delete_": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "network.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "pbd.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "pbd.disconnect": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "pbd.connect": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "pif.getIpv4ConfigurationModes": {
+    "params": {}
+  },
+  "pif.getIpv6ConfigurationModes": {
+    "params": {}
+  },
+  "pif.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "pif.disconnect": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "pif.connect": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "pif.reconfigureIp": {
+    "params": {
+      "id": {
+        "type": "string",
+        "optional": true
+      },
+      "mode": {
+        "type": "string",
+        "optional": true
+      },
+      "ip": {
+        "type": "string",
+        "optional": true
+      },
+      "netmask": {
+        "type": "string",
+        "optional": true
+      },
+      "gateway": {
+        "type": "string",
+        "optional": true
+      },
+      "dns": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "pif.editPif": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "vlan": {
+        "type": [
+          "integer",
+          "string"
+        ]
+      }
+    }
+  },
+  "plugin.get": {
+    "description": "returns a list of all installed plugins",
+    "params": {},
+    "permission": "admin"
+  },
+  "plugin.configure": {
+    "description": "sets the configuration of a plugin",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "configuration": {}
+    },
+    "permission": "admin"
+  },
+  "plugin.disableAutoload": {
+    "description": "",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "plugin.enableAutoload": {
+    "description": "enables a plugin, allowing it to be loaded",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "plugin.load": {
+    "description": "loads a plugin",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "plugin.unload": {
+    "description": "unloads a plugin",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "plugin.purgeConfiguration": {
+    "description": "removes a plugin configuration",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "plugin.test": {
+    "description": "Test a plugin with its current configuration",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "data": {
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "pool.set": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "name_label": {
+        "type": "string",
+        "optional": true
+      },
+      "name_description": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "pool.setDefaultSr": {
+    "params": {
+      "sr": {
+        "type": "string"
+      }
+    },
+    "permission": ""
+  },
+  "pool.setPoolMaster": {
+    "params": {
+      "host": {
+        "type": "string"
+      }
+    }
+  },
+  "pool.listMissingPatches": {
+    "description": "return an array of missing new patches in the host",
+    "params": {
+      "host": {
+        "type": "string"
+      }
+    }
+  },
+  "pool.installPatches": {
+    "description": "Install patches on hosts",
+    "params": {
+      "pool": {
+        "type": "string",
+        "optional": true
+      },
+      "patches": {
+        "type": "array",
+        "optional": true
+      },
+      "hosts": {
+        "type": "array",
+        "optional": true
+      }
+    }
+  },
+  "pool.uploadPatch": {
+    "params": {
+      "pool": {
+        "type": "string"
+      }
+    }
+  },
+  "pool.patch": {
+    "params": {
+      "pool": {
+        "type": "string"
+      }
+    }
+  },
+  "pool.getPatchesDifference": {
+    "params": {
+      "source": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string"
+      }
+    }
+  },
+  "pool.mergeInto": {
+    "params": {
+      "force": {
+        "type": "boolean",
+        "optional": true
+      },
+      "source": {
+        "type": "string",
+        "optional": true
+      },
+      "sources": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "target": {
+        "type": "string"
+      }
+    }
+  },
+  "pool.getLicenseState": {
+    "params": {
+      "pool": {
+        "type": "string"
+      }
+    }
+  },
+  "pool.installSupplementalPack": {
+    "description": "installs supplemental pack from ISO file on all hosts",
+    "params": {
+      "pool": {
+        "type": "string"
+      }
+    }
+  },
+  "proxy.register": {
+    "params": {
+      "address": {
+        "type": "string",
+        "optional": true
+      },
+      "vm": {
+        "type": "string",
+        "optional": true
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "authenticationToken": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "proxy.unregister": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "proxy.destroy": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "proxy.get": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "proxy.getAll": {
+    "params": {},
+    "permission": "admin"
+  },
+  "proxy.update": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "address": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "vm": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "authenticationToken": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "proxy.deploy": {
+    "params": {
+      "license": {
+        "type": "string"
+      },
+      "sr": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string",
+        "optional": true
+      },
+      "networkConfiguration": {
+        "type": "object",
+        "optional": true,
+        "properties": {
+          "ip": {
+            "type": "string"
+          },
+          "netmask": {
+            "type": "string"
+          },
+          "gateway": {
+            "type": "string"
+          },
+          "dns": {
+            "type": "string"
+          }
+        }
+      },
+      "proxy": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "proxy.upgradeAppliance": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "proxy.checkHealth": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "remote.getAll": {
+    "description": "Gets all existing fs remote points",
+    "params": {},
+    "permission": "admin"
+  },
+  "remote.get": {
+    "description": "Gets an existing fs remote point",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "remote.getAllInfo": {
+    "description": "Gets all info of remote",
+    "params": {},
+    "permission": "admin"
+  },
+  "remote.test": {
+    "description": "Performs a read/write matching test on a remote point",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "remote.list": {
+    "description": "Lists the files found in a remote point",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "remote.create": {
+    "description": "Creates a new fs remote point",
+    "params": {
+      "name": {
+        "type": "string"
+      },
+      "options": {
+        "type": "string",
+        "optional": true
+      },
+      "proxy": {
+        "type": "string",
+        "optional": true
+      },
+      "url": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "remote.set": {
+    "description": "Modifies an existing fs remote point",
+    "params": {
+      "enabled": {
+        "type": "boolean",
+        "optional": true
+      },
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "options": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "proxy": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "url": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "remote.delete": {
+    "description": "Deletes an existing fs remote point",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.create": {
+    "params": {
+      "name": {
+        "type": "string"
+      },
+      "subjects": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "objects": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "limits": {
+        "type": "object",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.set": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "subjects": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "objects": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "ipPools": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "limits": {
+        "type": "object",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.get": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": ""
+  },
+  "resourceSet.getAll": {
+    "description": "Get the list of all existing resource set",
+    "params": {},
+    "permission": ""
+  },
+  "resourceSet.addObject": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "object": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.removeObject": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "object": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.addSubject": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "subject": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.removeSubject": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "subject": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.addLimit": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "limitId": {
+        "type": "string"
+      },
+      "quantity": {
+        "type": "integer"
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.removeLimit": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "limitId": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "resourceSet.recomputeAllLimits": {
+    "description": "Recompute manually the current resource set usage",
+    "params": {},
+    "permission": "admin"
+  },
+  "role.getAll": {
+    "description": "Returns the list of all existing roles",
+    "params": {}
+  },
+  "schedule.getAll": {
+    "description": "Gets all existing schedules",
+    "params": {},
+    "permission": "admin"
+  },
+  "schedule.get": {
+    "description": "Gets an existing schedule",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "schedule.create": {
+    "description": "Creates a new schedule",
+    "params": {
+      "cron": {
+        "type": "string"
+      },
+      "enabled": {
+        "type": "boolean",
+        "optional": true
+      },
+      "jobId": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "timezone": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "schedule.set": {
+    "description": "Modifies an existing schedule",
+    "params": {
+      "cron": {
+        "type": "string",
+        "optional": true
+      },
+      "enabled": {
+        "type": "boolean",
+        "optional": true
+      },
+      "id": {
+        "type": "string"
+      },
+      "jobId": {
+        "type": "string",
+        "optional": true
+      },
+      "name": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "timezone": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "schedule.delete": {
+    "description": "Deletes an existing schedule",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "server.add": {
+    "description": "register a new Xen server",
+    "params": {
+      "label": {
+        "optional": true,
+        "type": "string"
+      },
+      "host": {
+        "type": "string"
+      },
+      "username": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      },
+      "autoConnect": {
+        "optional": true,
+        "type": "boolean"
+      },
+      "allowUnauthorized": {
+        "optional": true,
+        "type": "boolean"
+      }
+    },
+    "permission": "admin"
+  },
+  "server.remove": {
+    "description": "unregister a Xen server",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "server.getAll": {
+    "description": "returns all the registered Xen server",
+    "params": {},
+    "permission": "admin"
+  },
+  "server.set": {
+    "description": "changes the properties of a Xen server",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "label": {
+        "type": "string",
+        "optional": true
+      },
+      "host": {
+        "type": "string",
+        "optional": true
+      },
+      "username": {
+        "type": "string",
+        "optional": true
+      },
+      "password": {
+        "type": "string",
+        "optional": true
+      },
+      "allowUnauthorized": {
+        "optional": true,
+        "type": "boolean"
+      },
+      "readOnly": {
+        "optional": true,
+        "type": "boolean"
+      }
+    },
+    "permission": "admin"
+  },
+  "server.enable": {
+    "description": "enable a Xen server",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "server.disable": {
+    "description": "disable a Xen server",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "session.signIn": {
+    "description": "sign in",
+    "params": {}
+  },
+  "session.signOut": {
+    "description": "sign out the user from the current session",
+    "params": {},
+    "permission": ""
+  },
+  "session.getUser": {
+    "description": "return the currently connected user",
+    "params": {}
+  },
+  "session.signInWithPassword": {
+    "description": "sign in",
+    "params": {
+      "email": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      }
+    }
+  },
+  "session.signInWithToken": {
+    "description": "sign in",
+    "params": {
+      "token": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.set": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "name_label": {
+        "type": "string",
+        "optional": true
+      },
+      "name_description": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "sr.scan": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.destroy": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.forget": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.connectAllPbds": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.disconnectAllPbds": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.createIso": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "nameLabel": {
+        "type": "string"
+      },
+      "nameDescription": {
+        "type": "string"
+      },
+      "path": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      },
+      "user": {
+        "type": "string",
+        "optional": true
+      },
+      "password": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "sr.createFile": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "nameLabel": {
+        "type": "string"
+      },
+      "nameDescription": {
+        "type": "string"
+      },
+      "location": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.createNfs": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "nameLabel": {
+        "type": "string"
+      },
+      "nameDescription": {
+        "type": "string"
+      },
+      "server": {
+        "type": "string"
+      },
+      "serverPath": {
+        "type": "string"
+      },
+      "nfsVersion": {
+        "type": "string",
+        "optional": true
+      },
+      "nfsOptions": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "sr.createHba": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "nameLabel": {
+        "type": "string"
+      },
+      "nameDescription": {
+        "type": "string"
+      },
+      "scsiId": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.createLvm": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "nameLabel": {
+        "type": "string"
+      },
+      "nameDescription": {
+        "type": "string"
+      },
+      "device": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.createExt": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "nameLabel": {
+        "type": "string"
+      },
+      "nameDescription": {
+        "type": "string"
+      },
+      "device": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.probeZfs": {
+    "params": {
+      "host": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.probeNfs": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "server": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.probeHba": {
+    "params": {
+      "host": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.createIscsi": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "nameLabel": {
+        "type": "string"
+      },
+      "nameDescription": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string"
+      },
+      "port": {
+        "type": "integer",
+        "optional": true
+      },
+      "targetIqn": {
+        "type": "string"
+      },
+      "scsiId": {
+        "type": "string"
+      },
+      "chapUser": {
+        "type": "string",
+        "optional": true
+      },
+      "chapPassword": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "sr.probeIscsiIqns": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string"
+      },
+      "port": {
+        "type": "integer",
+        "optional": true
+      },
+      "chapUser": {
+        "type": "string",
+        "optional": true
+      },
+      "chapPassword": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "sr.probeIscsiLuns": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string"
+      },
+      "port": {
+        "type": "integer",
+        "optional": true
+      },
+      "targetIqn": {
+        "type": "string"
+      },
+      "chapUser": {
+        "type": "string",
+        "optional": true
+      },
+      "chapPassword": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "sr.probeIscsiExists": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "target": {
+        "type": "string"
+      },
+      "port": {
+        "type": "integer",
+        "optional": true
+      },
+      "targetIqn": {
+        "type": "string"
+      },
+      "scsiId": {
+        "type": "string"
+      },
+      "chapUser": {
+        "type": "string",
+        "optional": true
+      },
+      "chapPassword": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "sr.probeHbaExists": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "scsiId": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.probeNfsExists": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "server": {
+        "type": "string"
+      },
+      "serverPath": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.reattach": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "uuid": {
+        "type": "string"
+      },
+      "nameLabel": {
+        "type": "string"
+      },
+      "nameDescription": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.reattachIso": {
+    "params": {
+      "host": {
+        "type": "string"
+      },
+      "uuid": {
+        "type": "string"
+      },
+      "nameLabel": {
+        "type": "string"
+      },
+      "nameDescription": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.getUnhealthyVdiChainsLength": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "sr.stats": {
+    "description": "returns statistic of the sr",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "granularity": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "system.getMethodsInfo": {
+    "description": "returns the signatures of all available API methods",
+    "params": {}
+  },
+  "system.listMethods": {
+    "description": "returns the name of all available API methods",
+    "params": {}
+  },
+  "system.methodSignature": {
+    "description": "returns the signature of an API method",
+    "params": {}
+  },
+  "system.getServerTimezone": {
+    "description": "return the timezone server",
+    "params": {}
+  },
+  "system.getServerVersion": {
+    "description": "return the version of xo-server",
+    "params": {}
+  },
+  "system.getVersion": {
+    "description": "API version (unstable)",
+    "params": {}
+  },
+  "tag.add": {
+    "description": "add a new tag to an object",
+    "params": {
+      "tag": {
+        "type": "string"
+      },
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "tag.remove": {
+    "description": "remove an existing tag from an object",
+    "params": {
+      "tag": {
+        "type": "string"
+      },
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "task.cancel": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "task.destroy": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "test.getPermissionsForUser": {
+    "params": {
+      "userId": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "test.hasPermission": {
+    "params": {
+      "userId": {
+        "type": "string"
+      },
+      "objectId": {
+        "type": "string"
+      },
+      "permission": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "test.wait": {
+    "params": {
+      "duration": {
+        "type": "string"
+      }
+    }
+  },
+  "test.copyVm": {
+    "description": "export/import full/delta VM",
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "sr": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "test.changeConnectedXapiHostname": {
+    "description": "change the connected XAPI hostname and check if the pool and the local cache are updated",
+    "params": {
+      "hostname": {
+        "type": "string"
+      },
+      "newObject": {
+        "type": "string",
+        "description": "new connection's XO object"
+      },
+      "oldObject": {
+        "type": "string",
+        "description": "current connection's XO object"
+      }
+    },
+    "permission": "admin"
+  },
+  "token.create": {
+    "description": "create a new authentication token",
+    "params": {
+      "expiresIn": {
+        "optional": true,
+        "type": [
+          "number",
+          "string"
+        ]
+      }
+    },
+    "permission": ""
+  },
+  "token.delete": {
+    "description": "delete an existing authentication token",
+    "params": {
+      "token": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "token.deleteAll": {
+    "description": "delete all tokens of the current user except the current one",
+    "params": {
+      "except": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": ""
+  },
+  "user.create": {
+    "description": "creates a new user",
+    "params": {
+      "email": {
+        "type": "string"
+      },
+      "password": {
+        "type": "string"
+      },
+      "permission": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "user.delete": {
+    "description": "deletes an existing user",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "user.getAll": {
+    "description": "returns all the existing users",
+    "params": {},
+    "permission": "admin"
+  },
+  "user.set": {
+    "description": "changes the properties of an existing user",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string",
+        "optional": true
+      },
+      "password": {
+        "type": "string",
+        "optional": true
+      },
+      "permission": {
+        "type": "string",
+        "optional": true
+      },
+      "preferences": {
+        "type": "object",
+        "optional": true
+      }
+    },
+    "permission": ""
+  },
+  "user.changePassword": {
+    "description": "change password after checking old password (user function)",
+    "params": {
+      "oldPassword": {
+        "type": "string"
+      },
+      "newPassword": {
+        "type": "string"
+      }
+    },
+    "permission": ""
+  },
+  "vbd.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vbd.disconnect": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vbd.connect": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vbd.set": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "position": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "optional": true
+      }
+    }
+  },
+  "vbd.setBootable": {
+    "params": {
+      "vbd": {
+        "type": "string"
+      },
+      "bootable": {
+        "type": "boolean"
+      }
+    }
+  },
+  "vdi.delete_": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vdi.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vdi.migrate": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "sr_id": {
+        "type": "string"
+      }
+    }
+  },
+  "vdi.set": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "name_label": {
+        "type": "string",
+        "optional": true
+      },
+      "name_description": {
+        "type": "string",
+        "optional": true
+      },
+      "size": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      }
+    }
+  },
+  "vif.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vif.disconnect": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vif.connect": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vif.set": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string",
+        "optional": true
+      },
+      "mac": {
+        "type": "string",
+        "optional": true
+      },
+      "allowedIpv4Addresses": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "allowedIpv6Addresses": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "attached": {
+        "type": "boolean",
+        "optional": true
+      },
+      "rateLimit": {
+        "description": "in kilobytes per seconds",
+        "optional": true,
+        "type": [
+          "number",
+          "null"
+        ]
+      }
+    }
+  },
+  "vm.getHaValues": {
+    "params": {}
+  },
+  "vm.ejectCd": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.insertCd": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "cd_id": {
+        "type": "string"
+      },
+      "force": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "vm.migrate": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "force": {
+        "type": "boolean",
+        "optional": true
+      },
+      "targetHost": {
+        "type": "string"
+      },
+      "sr": {
+        "type": "string",
+        "optional": true
+      },
+      "mapVdisSrs": {
+        "type": "object",
+        "optional": true
+      },
+      "mapVifsNetworks": {
+        "type": "object",
+        "optional": true
+      },
+      "migrationNetwork": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "vm.restart": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "force": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "vm.copy": {
+    "params": {
+      "compress": {
+        "type": [
+          "boolean",
+          "string"
+        ],
+        "optional": true
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "vm": {
+        "type": "string"
+      },
+      "sr": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.convertToTemplate": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.convert": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.rollingDeltaBackup": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "remote": {
+        "type": "string"
+      },
+      "tag": {
+        "type": "string"
+      },
+      "retention": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "optional": true
+      },
+      "depth": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "vm.importDeltaBackup": {
+    "params": {
+      "sr": {
+        "type": "string"
+      },
+      "remote": {
+        "type": "string"
+      },
+      "filePath": {
+        "type": "string"
+      },
+      "mapVdisSrs": {
+        "type": "object",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "vm.deltaCopy": {
+    "params": {
+      "force": {
+        "type": "boolean",
+        "optional": true
+      },
+      "id": {
+        "type": "string"
+      },
+      "retention": {
+        "type": "number",
+        "optional": true
+      },
+      "sr": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.rollingSnapshot": {
+    "description": "Snapshots a VM with a tagged name, and removes the oldest snapshot with the same tag according to retention",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "tag": {
+        "type": "string"
+      },
+      "retention": {
+        "type": "number",
+        "optional": true
+      },
+      "depth": {
+        "type": "number",
+        "optional": true
+      }
+    }
+  },
+  "vm.backup": {
+    "description": "Exports a VM to the file system",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "remoteId": {
+        "type": "string"
+      },
+      "file": {
+        "type": "string"
+      },
+      "compress": {
+        "type": "boolean",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "vm.importBackup": {
+    "description": "Imports a VM into host, from a file found in the chosen remote",
+    "params": {
+      "remote": {
+        "type": "string"
+      },
+      "file": {
+        "type": "string"
+      },
+      "sr": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "vm.rollingBackup": {
+    "description": "Exports a VM to the file system with a tagged name, and removes the oldest backup with the same tag according to retention",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "remoteId": {
+        "type": "string"
+      },
+      "tag": {
+        "type": "string"
+      },
+      "retention": {
+        "type": "number",
+        "optional": true
+      },
+      "depth": {
+        "type": "number",
+        "optional": true
+      },
+      "compress": {
+        "type": "boolean",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "vm.rollingDrCopy": {
+    "description": "Copies a VM to a different pool, with a tagged name, and removes the oldest VM with the same tag from this pool, according to retention",
+    "params": {
+      "retention": {
+        "type": "number",
+        "optional": true
+      },
+      "depth": {
+        "type": "number",
+        "optional": true
+      },
+      "id": {
+        "type": "string"
+      },
+      "pool": {
+        "type": "string",
+        "optional": true
+      },
+      "sr": {
+        "type": "string",
+        "optional": true
+      },
+      "tag": {
+        "type": "string"
+      },
+      "deleteOldBackupsFirst": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "vm.start": {
+    "params": {
+      "force": {
+        "type": "boolean",
+        "optional": true
+      },
+      "host": {
+        "type": "string",
+        "optional": true
+      },
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.stop": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "force": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "vm.suspend": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.pause": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.resume": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.export": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "compress": {
+        "type": [
+          "boolean",
+          "string"
+        ],
+        "optional": true
+      }
+    }
+  },
+  "vm.import": {
+    "params": {
+      "data": {
+        "type": "object",
+        "optional": true,
+        "properties": {
+          "descriptionLabel": {
+            "type": "string"
+          },
+          "disks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "capacity": {
+                  "type": "integer"
+                },
+                "descriptionLabel": {
+                  "type": "string"
+                },
+                "nameLabel": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "position": {
+                  "type": "integer"
+                }
+              }
+            },
+            "optional": true
+          },
+          "memory": {
+            "type": "integer"
+          },
+          "nameLabel": {
+            "type": "string"
+          },
+          "nCpus": {
+            "type": "integer"
+          },
+          "networks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "optional": true
+          }
+        }
+      },
+      "type": {
+        "type": "string",
+        "optional": true
+      },
+      "sr": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.attachDisk": {
+    "params": {
+      "bootable": {
+        "type": "boolean",
+        "optional": true
+      },
+      "mode": {
+        "type": "string",
+        "optional": true
+      },
+      "position": {
+        "type": "string",
+        "optional": true
+      },
+      "vdi": {
+        "type": "string"
+      },
+      "vm": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.createInterface": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "network": {
+        "type": "string"
+      },
+      "position": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      },
+      "mac": {
+        "type": "string",
+        "optional": true
+      },
+      "allowedIpv4Addresses": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "allowedIpv6Addresses": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "optional": true
+      }
+    }
+  },
+  "vm.attachPci": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "pciId": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.detachPci": {
+    "params": {
+      "vm": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.stats": {
+    "description": "returns statistics about the VM",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "granularity": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "vm.setBootOrder": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "order": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.recoveryStart": {
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.getCloudInitConfig": {
+    "params": {
+      "template": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.createCloudInitConfigDrive": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "sr": {
+        "type": "string"
+      },
+      "config": {
+        "type": "string"
+      },
+      "networkConfig": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "vm.createVgpu": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "gpuGroup": {
+        "type": "string"
+      },
+      "vgpuType": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.deleteVgpu": {
+    "params": {
+      "vgpu": {
+        "type": "string"
+      }
+    }
+  },
+  "vm.create": {
+    "params": {
+      "affinityHost": {
+        "type": "string",
+        "optional": true
+      },
+      "bootAfterCreate": {
+        "type": "boolean",
+        "optional": true
+      },
+      "cloudConfig": {
+        "type": "string",
+        "optional": true
+      },
+      "networkConfig": {
+        "type": "string",
+        "optional": true
+      },
+      "coreOs": {
+        "type": "boolean",
+        "optional": true
+      },
+      "clone": {
+        "type": "boolean",
+        "optional": true
+      },
+      "coresPerSocket": {
+        "type": [
+          "string",
+          "number"
+        ],
+        "optional": true
+      },
+      "resourceSet": {
+        "type": "string",
+        "optional": true
+      },
+      "installation": {
+        "type": "object",
+        "optional": true,
+        "properties": {
+          "method": {
+            "type": "string"
+          },
+          "repository": {
+            "type": "string"
+          }
+        }
+      },
+      "vgpuType": {
+        "type": "string",
+        "optional": true
+      },
+      "gpuGroup": {
+        "type": "string",
+        "optional": true
+      },
+      "name_label": {
+        "type": "string"
+      },
+      "name_description": {
+        "type": "string",
+        "optional": true
+      },
+      "pv_args": {
+        "type": "string",
+        "optional": true
+      },
+      "share": {
+        "type": "boolean",
+        "optional": true
+      },
+      "template": {
+        "type": "string"
+      },
+      "VIFs": {
+        "optional": true,
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "network": {
+              "type": "string"
+            },
+            "mac": {
+              "optional": true,
+              "type": "string"
+            },
+            "allowedIpv4Addresses": {
+              "optional": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowedIpv6Addresses": {
+              "optional": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "VDIs": {
+        "optional": true,
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            },
+            "SR": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "existingDisks": {
+        "optional": true,
+        "type": "object",
+        "items": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "optional": true
+            },
+            "$SR": {
+              "type": "string",
+              "optional": true
+            }
+          }
+        }
+      },
+      "hvmBootFirmware": {
+        "type": "string",
+        "optional": true
+      },
+      "copyHostBiosStrings": {
+        "type": "boolean",
+        "optional": true
+      },
+      "*": {
+        "type": "any"
+      }
+    }
+  },
+  "vm.delete": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "deleteDisks": {
+        "optional": true,
+        "type": "boolean"
+      },
+      "force": {
+        "optional": true,
+        "type": "boolean"
+      },
+      "forceDeleteDefaultTemplate": {
+        "optional": true,
+        "type": "boolean"
+      }
+    }
+  },
+  "vm.set": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "auto_poweron": {
+        "type": "boolean",
+        "optional": true
+      },
+      "name_label": {
+        "type": "string",
+        "optional": true
+      },
+      "name_description": {
+        "type": "string",
+        "optional": true
+      },
+      "high_availability": {
+        "optional": true,
+        "pattern": {},
+        "type": "string"
+      },
+      "CPUs": {
+        "type": "integer",
+        "optional": true
+      },
+      "cpusMax": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      },
+      "memory": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      },
+      "memoryMin": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      },
+      "memoryMax": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      },
+      "memoryStaticMax": {
+        "type": [
+          "integer",
+          "string"
+        ],
+        "optional": true
+      },
+      "PV_args": {
+        "type": "string",
+        "optional": true
+      },
+      "cpuMask": {
+        "type": "array",
+        "optional": true
+      },
+      "cpuWeight": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "optional": true
+      },
+      "cpuCap": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "optional": true
+      },
+      "affinityHost": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "vga": {
+        "type": "string",
+        "optional": true
+      },
+      "videoram": {
+        "type": "number",
+        "optional": true
+      },
+      "coresPerSocket": {
+        "type": [
+          "string",
+          "number",
+          "null"
+        ],
+        "optional": true
+      },
+      "hasVendorDevice": {
+        "type": "boolean",
+        "optional": true
+      },
+      "expNestedHvm": {
+        "type": "boolean",
+        "optional": true
+      },
+      "resourceSet": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "share": {
+        "type": "boolean",
+        "optional": true
+      },
+      "startDelay": {
+        "type": "integer",
+        "optional": true
+      },
+      "nicType": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "hvmBootFirmware": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "optional": true
+      },
+      "virtualizationMode": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "vm.clone": {
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "full_copy": {
+        "type": "boolean"
+      }
+    }
+  },
+  "vm.snapshot": {
+    "params": {
+      "description": {
+        "type": "string",
+        "optional": true
+      },
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "saveMemory": {
+        "type": "boolean",
+        "optional": true
+      }
+    }
+  },
+  "vm.revert": {
+    "params": {
+      "snapshot": {
+        "type": "string"
+      }
+    }
+  },
+  "xo.clean": {
+    "params": {},
+    "permission": "admin"
+  },
+  "xo.exportConfig": {
+    "params": {},
+    "permission": "admin"
+  },
+  "xo.getAllObjects": {
+    "description": "Returns all XO objects",
+    "params": {
+      "filter": {
+        "type": "object",
+        "optional": true
+      },
+      "limit": {
+        "type": "number",
+        "optional": true
+      },
+      "ndjson": {
+        "type": "boolean",
+        "optional": true
+      }
+    },
+    "permission": ""
+  },
+  "xo.importConfig": {
+    "params": {},
+    "permission": "admin"
+  },
+  "xosan.getVolumeInfo": {
+    "description": "info on gluster volume",
+    "params": {
+      "sr": {
+        "type": "string"
+      },
+      "infoType": {
+        "type": "string",
+        "eq": [
+          "heal",
+          "status",
+          "statusDetail",
+          "statusMem",
+          "info",
+          "profile",
+          "profileTop",
+          "hosts"
+        ]
+      }
+    },
+    "permission": "admin"
+  },
+  "xosan.profileStatus": {
+    "description": "activate, deactivate, or interrogate profile data",
+    "params": {
+      "sr": {
+        "type": "string"
+      },
+      "changeStatus": {
+        "type": "bool",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "xosan.fixHostNotInNetwork": {
+    "description": "put host in xosan network",
+    "params": {
+      "xosanSr": {
+        "type": "string"
+      },
+      "host": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "xosan.replaceBrick": {
+    "description": "replaceBrick brick in gluster volume",
+    "params": {
+      "xosansr": {
+        "type": "string"
+      },
+      "previousBrick": {
+        "type": "string"
+      },
+      "newLvmSr": {
+        "type": "string"
+      },
+      "brickSize": {
+        "type": "number"
+      }
+    },
+    "permission": "admin"
+  },
+  "xosan.checkSrCurrentState": {
+    "description": "checks if there is an operation currently running on the SR",
+    "params": {
+      "poolId": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "xosan.computeXosanPossibleOptions": {
+    "params": {
+      "lvmSrs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "brickSize": {
+        "type": "number",
+        "optional": true
+      }
+    }
+  },
+  "xosan.unlock": {
+    "description": "Unlock XOSAN SR functionalities by binding it to a paid license",
+    "params": {
+      "licenseId": {
+        "type": "string"
+      },
+      "sr": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "xosan.downloadAndInstallXosanPack": {
+    "description": "Register a resource via cloud plugin",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      },
+      "pool": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "xosan.createSR": {
+    "description": "create gluster VM",
+    "params": {
+      "brickSize": {
+        "type": "number",
+        "optional": true
+      },
+      "srs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "template": {
+        "type": "object"
+      },
+      "pif": {
+        "type": "string"
+      },
+      "vlan": {
+        "type": "string"
+      },
+      "glusterType": {
+        "type": "string"
+      },
+      "redundancy": {
+        "type": "number"
+      },
+      "memorySize": {
+        "type": "number",
+        "optional": true
+      },
+      "ipRange": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "xosan.addBricks": {
+    "description": "add brick to XOSAN SR",
+    "params": {
+      "xosansr": {
+        "type": "string"
+      },
+      "lvmsrs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "brickSize": {
+        "type": "number"
+      }
+    },
+    "permission": "admin"
+  },
+  "xosan.removeBricks": {
+    "description": "remove brick from XOSAN SR",
+    "params": {
+      "xosansr": {
+        "type": "string"
+      },
+      "bricks": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "permission": "admin"
+  },
+  "cloudConfig.getAll": {
+    "description": "Gets all existing cloud configs templates",
+    "params": {}
+  },
+  "cloudConfig.create": {
+    "description": "Creates a new cloud config template",
+    "params": {
+      "name": {
+        "type": "string"
+      },
+      "template": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "cloudConfig.update": {
+    "description": "Modifies an existing cloud config template",
+    "params": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string",
+        "optional": true
+      },
+      "template": {
+        "type": "string",
+        "optional": true
+      }
+    },
+    "permission": "admin"
+  },
+  "cloudConfig.delete": {
+    "description": "Deletes an existing cloud config template",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    },
+    "permission": "admin"
+  },
+  "disk.exportContent": {
+    "description": "export the content of a VDI",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "disk.importContent": {
+    "description": "import contents into a VDI",
+    "params": {
+      "id": {
+        "type": "string"
+      }
+    }
+  },
+  "disk.import": {
+    "params": {
+      "description": {
+        "type": "string",
+        "optional": true
+      },
+      "name": {
+        "type": "string"
+      },
+      "sr": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      },
+      "vmdkData": {
+        "type": "object",
+        "optional": true,
+        "properties": {
+          "capacity": {
+            "type": "integer"
+          },
+          "grainLogicalAddressList": {
+            "description": "virtual address of the blocks on the disk (LBA), in order encountered in the VMDK",
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "grainFileOffsetList": {
+            "description": "offset of the grains in the VMDK file, in order encountered in the VMDK",
+            "optional": true,
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  },
+  "disk.create": {
+    "description": "create a new disk on a SR",
+    "params": {
+      "name": {
+        "type": "string"
+      },
+      "size": {
+        "type": [
+          "integer",
+          "string"
+        ]
+      },
+      "sr": {
+        "type": "string"
+      },
+      "vm": {
+        "type": "string",
+        "optional": true
+      },
+      "bootable": {
+        "type": "boolean",
+        "optional": true
+      },
+      "mode": {
+        "type": "string",
+        "optional": true
+      },
+      "position": {
+        "type": "string",
+        "optional": true
+      }
+    }
+  },
+  "docker.register": {
+    "description": "Register the VM for Docker management",
+    "params": {
+      "vm": {
+        "type": "string"
+      }
+    }
+  },
+  "docker.deregister": {
+    "description": "Deregister the VM for Docker management",
+    "params": {
+      "vm": {
+        "type": "string"
+      }
+    }
+  },
+  "docker.start": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "container": {
+        "type": "string"
+      }
+    }
+  },
+  "docker.stop": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "container": {
+        "type": "string"
+      }
+    }
+  },
+  "docker.restart": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "container": {
+        "type": "string"
+      }
+    }
+  },
+  "docker.pause": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "container": {
+        "type": "string"
+      }
+    }
+  },
+  "docker.unpause": {
+    "params": {
+      "vm": {
+        "type": "string"
+      },
+      "container": {
+        "type": "string"
+      }
+    }
+  }
+}
