@@ -4,12 +4,11 @@ import uuid
 import aiohttp
 from tabulate import tabulate
 
-# Configuration values – replace these with your actual values
 XO_WS_URL = "ws://xo-cslab.dei.uc.pt/api/"
 username = "ctf"
 password = "cslabctf2024"
 template_id = "2efd48d2-b12d-8f3e-56e6-5ed41c02118b"  # Must be a template that supports Cloud‑Init
-network_uuid = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"   # Replace with your valid network UUID
+network_uuid = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"   #CTF-Subnet
 default_vm_description = "Created via CLI with static IP via Cloud-Init"
 
 def generate_cloud_config(ip, hostname):
@@ -35,9 +34,6 @@ def generate_cloud_config(ip, hostname):
     return json.dumps(config)
 
 async def send_rpc(ws, method, params):
-    """
-    Build and send a JSON‑RPC request with a unique ID and wait for the matching response.
-    """
     request_id = str(uuid.uuid4())
     request = {
         "jsonrpc": "2.0",
@@ -64,9 +60,6 @@ async def sign_in(ws):
     return response
 
 async def get_all(ws, object_type):
-    """
-    List objects using xo.getAllObjects filtered by type.
-    """
     print(f"\nFetching list of {object_type}s...")
     response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": object_type}})
     if "result" in response:
@@ -91,10 +84,10 @@ async def create_vm_static(ws, vm_name, ip, description=default_vm_description):
         "name_label": vm_name,
         "name_description": description,
         "template": template_id,
+        "bootAfterCreate":True,
         "VIFs": [
             {
                 "network": network_uuid,
-                # Remove "mac" to let XO assign one automatically.
                 "allowedIpv4Addresses": [ip]
             }
         ],
@@ -118,7 +111,6 @@ async def run_create_team_interactive(num_teams):
         async with session.ws_connect(XO_WS_URL) as ws:
             await sign_in(ws)
             for team in range(1, num_teams + 1):
-                # Create 5 VMs per team.
                 for i in range(2):
                     vm_name = f"CTF-TEAM-{team}-TEST-{i+1}"
                     ip = f"192.168.{team}.{100 + i}"
