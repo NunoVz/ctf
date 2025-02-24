@@ -10,13 +10,10 @@ username = "ctf"
 password = "cslabctf2024"
 
 # VM creation parameters
-pool_id = "6ddb8190-651e-f8ed-7fab-5e5a225857b7"
 template_id = "2efd48d2-b12d-8f3e-56e6-5ed41c02118b"   # Must be a template that supports Cloud‑Init
-host_uuid = "8cc792b1-d2c1-4a23-bd33-291d006cf7f5"         # Replace with the actual host UUID
-network_uuid = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"   
+network_uuid = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"    # Replace with your valid network UUID
 vm_name = "CTF SCRIPT TEST NETWORK"
 vm_description = "Hello Shift (Focal Fossa)"
-
 
 cloud_config = {
     "hostname": "my-vm",
@@ -70,19 +67,19 @@ async def sign_in(ws):
 
 async def create_vm_static(ws):
     """
-    Create a VM with a static IP configuration via Cloud‑Init.
-    Note: According to your accepted parameters, the 'cloudConfig' property must be a string.
+    Create a VM with static IP configuration via Cloud‑Init.
+    Note: 'cloudConfig' must be a string.
     """
     params = {
         "name_label": vm_name,
         "name_description": vm_description,
         "template": template_id,
-        "affinityHost": host_uuid,  
+        # Removed "affinityHost": host_uuid because it was invalid.
         "VIFs": [
             {
                 "network": network_uuid,
                 "mac": "auto",
-                "allowedIpv4Addresses": ["192.168.1.100"]  
+                "allowedIpv4Addresses": ["192.168.1.100"]
             }
         ],
         "cloudConfig": cloud_config_str
@@ -93,9 +90,10 @@ async def create_vm_static(ws):
     if "result" in response:
         return response["result"]
     return None
-async def get_all_vms(ws):
+
+async def get_all(ws,filter):
     print("Fetching list of VMs...")
-    response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": "VM"}})
+    response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": filter}})
     if "result" in response:
         vms = response["result"]
         table_data = []
@@ -115,7 +113,10 @@ async def main():
             # Sign in to the XO server
             await sign_in(ws)
             print("\nExisting VMs:")
-            await get_all_vms(ws)
+            await get_all(ws,"VM")
+            print("\nExisting Host:")
+            await get_all(ws,"host")
+
 
             # Create the VM with static IP settings
             vm_id = await create_vm_static(ws)
@@ -125,7 +126,7 @@ async def main():
                 print("VM creation failed.")
 
             print("\nUpdated VM List:")
-            await get_all_vms(ws)
+            await get_all(ws,"VM")
 
 if __name__ == "__main__":
     asyncio.run(main())
