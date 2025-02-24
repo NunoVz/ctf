@@ -2,6 +2,7 @@ import asyncio
 import json
 import uuid
 import aiohttp
+from tabulate import tabulate
 
 # Configuration values – replace these with your actual values
 XO_WS_URL = "ws://xo-cslab.dei.uc.pt/api/"
