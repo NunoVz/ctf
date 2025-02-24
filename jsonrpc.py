@@ -15,7 +15,7 @@ async def routine():
     print('\n'.join([str(e) for e in methodsInfoResult.keys()]))
 
     # signIn required
-    result = await server.session.signIn(username='cslab', password='cslabctf2024')
+    result = await server.session.signIn(username='ctf', password='cslabctf2024')
     result = await server.xo.getAllObjects(filter={"type": "VIF"}, limit=10)
 
     print('[')
