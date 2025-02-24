@@ -1,20 +1,20 @@
 import asyncio
-import argparse
 import json
 import uuid
 import aiohttp
 from tabulate import tabulate
 
+# Configuration values – replace these with your actual values
 XO_WS_URL = "ws://xo-cslab.dei.uc.pt/api/"
 username = "ctf"
 password = "cslabctf2024"
-template_id = "2efd48d2-b12d-8f3e-56e6-5ed41c02118b"  
+template_id = "2efd48d2-b12d-8f3e-56e6-5ed41c02118b"  # Must be a template that supports Cloud‑Init
 network_uuid = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"   # Replace with your valid network UUID
 default_vm_description = "Created via CLI with static IP via Cloud-Init"
 
 def generate_cloud_config(ip, hostname):
     """
-    Generate a Cloud-Init configuration as a JSON string using the given IP and hostname.
+    Generate a Cloud‑Init configuration (as a JSON string) using the given IP and hostname.
     """
     config = {
         "hostname": hostname,
@@ -67,12 +67,12 @@ async def get_all(ws, object_type):
     """
     List objects using xo.getAllObjects filtered by type.
     """
-    print(f"Fetching list of {object_type}s...")
+    print(f"\nFetching list of {object_type}s...")
     response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": object_type}})
     if "result" in response:
-        objects = response["result"]
+        objs = response["result"]
         table_data = []
-        for obj_id, details in objects.items():
+        for obj_id, details in objs.items():
             name = details.get("name_label", "N/A")
             table_data.append([obj_id, name])
         if table_data:
@@ -84,7 +84,7 @@ async def get_all(ws, object_type):
 
 async def create_vm_static(ws, vm_name, ip, description=default_vm_description):
     """
-    Create a VM with a static IP configuration via Cloud‑Init.
+    Create a VM with static IP configuration via Cloud‑Init.
     """
     cloud_config_str = generate_cloud_config(ip, vm_name)
     params = {
@@ -94,66 +94,74 @@ async def create_vm_static(ws, vm_name, ip, description=default_vm_description):
         "VIFs": [
             {
                 "network": network_uuid,
-                "allowedIpv4Addresses": [ ip ]
+                # Remove "mac" to let XO assign one automatically.
+                "allowedIpv4Addresses": [ip]
             }
         ],
         "cloudConfig": cloud_config_str
     }
-    print(f"Creating VM '{vm_name}' with static IP {ip}...")
+    print(f"\nCreating VM '{vm_name}' with static IP {ip}...")
     response = await send_rpc(ws, "vm.create", params)
     print("Create VM response:", response)
     if "result" in response:
         return response["result"]
     return None
 
-def parse_args():
-    parser = argparse.ArgumentParser(
-        description="XO CLI to list objects and create VMs with static IP configuration"
-    )
-    subparsers = parser.add_subparsers(dest="command", required=True)
-
-    list_parser = subparsers.add_parser("list", help="List objects by type (e.g., VM, host, network)")
-    list_parser.add_argument("object_type", type=str, help="Type of object to list (e.g., VM, host)")
-
-    team_parser = subparsers.add_parser("create-team", help="Create VMs for teams")
-    team_parser.add_argument("num_teams", type=int, help="Number of teams")
-
-    single_parser = subparsers.add_parser("create-vm", help="Create a single VM")
-    single_parser.add_argument("name", type=str, help="Name for the VM")
-    single_parser.add_argument("ip", type=str, help="Static IP address for the VM")
-    
-    return parser.parse_args()
-
-async def run_cli(args):
+async def run_list_interactive(object_type):
     async with aiohttp.ClientSession() as session:
         async with session.ws_connect(XO_WS_URL) as ws:
             await sign_in(ws)
+            await get_all(ws, object_type)
 
-            if args.command == "list":
-                await get_all(ws, args.object_type)
-            elif args.command == "create-team":
-                num_teams = args.num_teams
-                for team in range(1, num_teams + 1):
-                    for i in range(5):
-                        vm_name = f"CTF-TEAM-{team}-TEST-{i+1}"
-                        ip = f"192.168.{team}.{100 + i}"
-                        vm_id = await create_vm_static(ws, vm_name, ip)
-                        if vm_id:
-                            print(f"Created VM for team {team}: {vm_name} with IP {ip} (ID: {vm_id})")
-                        else:
-                            print(f"Failed to create VM for team {team}: {vm_name} with IP {ip}")
-            elif args.command == "create-vm":
-                vm_id = await create_vm_static(ws, args.name, args.ip)
-                if vm_id:
-                    print(f"Created VM '{args.name}' with IP {args.ip} (ID: {vm_id})")
-                else:
-                    print("VM creation failed.")
+async def run_create_team_interactive(num_teams):
+    async with aiohttp.ClientSession() as session:
+        async with session.ws_connect(XO_WS_URL) as ws:
+            await sign_in(ws)
+            for team in range(1, num_teams + 1):
+                # Create 5 VMs per team.
+                for i in range(5):
+                    vm_name = f"CTF-TEAM-{team}-TEST-{i+1}"
+                    # For team X, the first VM gets IP 192.168.X.100, then .101, etc.
+                    ip = f"192.168.{team}.{100 + i}"
+                    vm_id = await create_vm_static(ws, vm_name, ip)
+                    if vm_id:
+                        print(f"Created VM for team {team}: {vm_name} with IP {ip} (ID: {vm_id})")
+                    else:
+                        print(f"Failed to create VM for team {team}: {vm_name} with IP {ip}")
+
+async def run_create_vm_interactive(name, ip):
+    async with aiohttp.ClientSession() as session:
+        async with session.ws_connect(XO_WS_URL) as ws:
+            await sign_in(ws)
+            vm_id = await create_vm_static(ws, name, ip)
+            if vm_id:
+                print(f"Created VM '{name}' with IP {ip} (ID: {vm_id})")
             else:
-                print("Unknown command.")
+                print("VM creation failed.")
 
-def main():
-    args = parse_args()
-    asyncio.run(run_cli(args))
+def interactive_cli():
+    print("Welcome to XO CLI")
+    print("Select an option:")
+    print("1. List objects (e.g., VM, host, network)")
+    print("2. Create team VMs (5 VMs per team)")
+    print("3. Create a single VM")
+    choice = input("Enter your choice (1/2/3): ").strip()
+
+    if choice == "1":
+        obj_type = input("Enter the type of object to list (e.g., VM, host, network): ").strip()
+        asyncio.run(run_list_interactive(obj_type))
+    elif choice == "2":
+        try:
+            num_teams = int(input("Enter the number of teams: ").strip())
+            asyncio.run(run_create_team_interactive(num_teams))
+        except ValueError:
+            print("Invalid number entered.")
+    elif choice == "3":
+        vm_name = input("Enter the VM name: ").strip()
+        ip = input("Enter the static IP address (e.g., 192.168.2.200): ").strip()
+        asyncio.run(run_create_vm_interactive(vm_name, ip))
+    else:
+        print("Invalid choice. Exiting.")
 
 if __name__ == "__main__":
-    main()
+    interactive_cli()
