@@ -1,78 +1,76 @@
-import requests
 import json
-from tabulate import tabulate
+import websocket
 
-# Use the JSON-RPC endpoint.
-# Adjust the scheme (http or https) depending on your XO configuration.
-JSON_RPC_URL = "https://xo-cslab.dei.uc.pt/jsonrpc"
-
-# Your credentials
 USERNAME = "cslab"
 PASSWORD = "cslabctf2024"
 
-def rpc_call(method, params, rpc_id, headers=None):
+# Global websocket instance (will be set on connection)
+ws_instance = None
+
+def send_rpc(method, params, rpc_id):
+    """Helper to send a JSON-RPC message over the WebSocket."""
     payload = {
         "jsonrpc": "2.0",
         "method": method,
         "params": params,
         "id": rpc_id
     }
-    data = json.dumps(payload)
-    response = requests.post(JSON_RPC_URL, data=data, headers=headers)
-    print(f"Response for {method}:", response.text)
+    message = json.dumps(payload)
+    print("Sending:", message)
+    ws_instance.send(message)
+
+def on_message(ws, message):
+    print("Received:", message)
     try:
-        result = response.json()
-    except ValueError as e:
-        raise Exception(f"Invalid JSON response: {e}")
-    if "error" in result:
-        raise Exception(f"Error calling {method}: {result['error']}")
-    return result["result"]
-
-def login():
-    headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
-    # Call the JSON-RPC login method.
-    token = rpc_call("session.login_with_password", {"username": USERNAME, "password": PASSWORD}, rpc_id=1, headers=headers)
-    return token
-
-def get_vms(auth_token):
-    headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        # Send the auth token as a cookie.
-        "Cookie": f"authenticationToken={auth_token}"
-    }
-    # Call vm.getAll to retrieve the list of VMs (using rpc_id 2 as an example).
-    vms = rpc_call("vm.getAll", {}, rpc_id=2, headers=headers)
-    return vms
-
-def show_vms(vms):
-    table_data = []
-    if isinstance(vms, list):
-        for vm in vms:
-            vm_uuid = vm.get("uuid", "N/A")
-            name = vm.get("name_label", "N/A")
-            description = vm.get("name_description", "N/A")
-            table_data.append([vm_uuid, name, description])
-    else:
-        print("Unexpected VM data structure:", vms)
+        response = json.loads(message)
+    except Exception as e:
+        print("Error parsing JSON:", e)
         return
 
-    if table_data:
-        print(tabulate(table_data, headers=["VM UUID", "Name", "Description"], tablefmt="pretty"))
+    # Check which call this response belongs to
+    rpc_id = response.get("id")
+    if rpc_id == 1:
+        # Login response
+        token = response.get("result")
+        if token:
+            print("Login successful, token:", token)
+            # Once logged in, request the list of VMs.
+            send_rpc("vm.getAll", {}, 2)
+        else:
+            print("Login failed, response:", response)
+    elif rpc_id == 2:
+        # vm.getAll response
+        vms = response.get("result")
+        print("\nList of VMs:")
+        if isinstance(vms, list):
+            for vm in vms:
+                vm_uuid = vm.get("uuid", "N/A")
+                name = vm.get("name_label", "N/A")
+                description = vm.get("name_description", "N/A")
+                print(f"VM UUID: {vm_uuid}\nName: {name}\nDescription: {description}\n")
+        else:
+            print("Unexpected VM data structure:", vms)
     else:
-        print("No VMs found.")
+        print("Other response:", response)
+
+def on_error(ws, error):
+    print("Error:", error)
+
+def on_close(ws, close_status_code, close_msg):
+    print("### WebSocket closed ###")
+
+def on_open(ws):
+    print("WebSocket connection opened.")
+    # Send the login JSON-RPC request.
+    send_rpc("session.login_with_password", {"username": USERNAME, "password": PASSWORD}, 1)
 
 if __name__ == "__main__":
-    try:
-        # Log in and get a session token.
-        token = login()
-        print("Login successful. Token:", token)
-        # Use the token to retrieve the VMs.
-        vms = get_vms(token)
-        print("\nExisting VMs:")
-        show_vms(vms)
-    except Exception as e:
-        print("Error:", e)
+    websocket.enableTrace(True)
+    # Use the secure WebSocket endpoint. Adjust scheme (wss vs. ws) as needed.
+    ws_url = "wss://xo-cslab.dei.uc.pt/jsonrpc"
+    ws_instance = websocket.WebSocketApp(ws_url,
+                                          on_open=on_open,
+                                          on_message=on_message,
+                                          on_error=on_error,
+                                          on_close=on_close)
+    ws_instance.run_forever()
