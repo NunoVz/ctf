@@ -1,6 +1,8 @@
 Creation params:
 
 Get to http://xo-cslab.dei.uc.pt/rest/v0/pools/6ddb8190-651e-f8ed-7fab-5e5a225857b7/actions/create_vm
+
+/actions/create_vm
 {
     "params": {
         "affinity": {
