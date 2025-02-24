@@ -24,10 +24,10 @@ async def show_vms(server):
 
 async def create_vm(server):
     payload = {
-        "pool": pool_id,
-        "name_label": vm_name,
-        "name_description": vm_description,
-        "template": template_id,
+        'pool': pool_id,
+        'name_label': vm_name,
+        'name_description': vm_description,
+        'template': template_id,
     }
     print("Creating a new VM based on the template...")
 
