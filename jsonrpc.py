@@ -2,7 +2,7 @@ import requests
 from tabulate import tabulate
 
 # JSON-RPC endpoint
-JSON_RPC_URL = "http://xo-cslab.dei.uc.pt/jsonrpc"
+JSON_RPC_URL = "http://xo-cslab.dei.uc.pt/api"
 
 # Replace these with your actual credentials
 USERNAME = "cslab"
