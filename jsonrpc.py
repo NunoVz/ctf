@@ -74,11 +74,11 @@ async def create_vm_static(ws):
         "name_label": vm_name,
         "name_description": vm_description,
         "template": template_id,
-        # Removed "affinityHost": host_uuid because it was invalid.
+        # Removed affinityHost for simplicity.
         "VIFs": [
             {
                 "network": network_uuid,
-                "mac": "auto",
+                # Removed "mac": "auto" to let XO assign a MAC address automatically.
                 "allowedIpv4Addresses": ["192.168.1.100"]
             }
         ],
@@ -90,6 +90,7 @@ async def create_vm_static(ws):
     if "result" in response:
         return response["result"]
     return None
+
 
 async def get_all(ws,filter):
     print("Fetching list of VMs...")
