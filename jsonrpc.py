@@ -1,37 +1,38 @@
 import asyncio
+import argparse
 import json
 import uuid
 import aiohttp
 from tabulate import tabulate
 
-# Configuration values – replace these with your actual values
 XO_WS_URL = "ws://xo-cslab.dei.uc.pt/api/"
 username = "ctf"
 password = "cslabctf2024"
+template_id = "2efd48d2-b12d-8f3e-56e6-5ed41c02118b"  
+network_uuid = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"   # Replace with your valid network UUID
+default_vm_description = "Created via CLI with static IP via Cloud-Init"
 
-# VM creation parameters
-template_id = "2efd48d2-b12d-8f3e-56e6-5ed41c02118b"   # Must be a template that supports Cloud‑Init
-network_uuid = "ea5aca40-b7d2-b896-5efd-dce07151d4ba"    # Replace with your valid network UUID
-vm_name = "CTF SCRIPT TEST NETWORK"
-vm_description = "Hello Shift (Focal Fossa)"
-
-cloud_config = {
-    "hostname": "my-vm",
-    "manage_etc_hosts": True,
-    "network": {
-        "version": 2,
-        "ethernets": {
-            "eth0": {
-                "addresses": ["192.168.1.100/24"],
-                "gateway4": "192.168.1.1",
-                "nameservers": {
-                    "addresses": ["8.8.8.8", "8.8.4.4"]
+def generate_cloud_config(ip, hostname):
+    """
+    Generate a Cloud-Init configuration as a JSON string using the given IP and hostname.
+    """
+    config = {
+        "hostname": hostname,
+        "manage_etc_hosts": True,
+        "network": {
+            "version": 2,
+            "ethernets": {
+                "eth0": {
+                    "addresses": [f"{ip}/24"],
+                    "gateway4": "192.168.1.1",
+                    "nameservers": {
+                        "addresses": ["8.8.8.8", "8.8.4.4"]
+                    }
                 }
             }
         }
     }
-}
-cloud_config_str = json.dumps(cloud_config)
+    return json.dumps(config)
 
 async def send_rpc(ws, method, params):
     """
@@ -57,77 +58,102 @@ async def send_rpc(ws, method, params):
     return None
 
 async def sign_in(ws):
-    params = {
-        "username": username,
-        "password": password
-    }
+    params = {"username": username, "password": password}
     response = await send_rpc(ws, "session.signIn", params)
     print("Sign in response:", response)
     return response
 
-async def create_vm_static(ws):
+async def get_all(ws, object_type):
     """
-    Create a VM with static IP configuration via Cloud‑Init.
-    Note: 'cloudConfig' must be a string.
+    List objects using xo.getAllObjects filtered by type.
     """
+    print(f"Fetching list of {object_type}s...")
+    response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": object_type}})
+    if "result" in response:
+        objects = response["result"]
+        table_data = []
+        for obj_id, details in objects.items():
+            name = details.get("name_label", "N/A")
+            table_data.append([obj_id, name])
+        if table_data:
+            print(tabulate(table_data, headers=["ID", "Name"], tablefmt="pretty"))
+        else:
+            print(f"No {object_type}s found.")
+    else:
+        print("Failed to fetch objects. Response:", response)
+
+async def create_vm_static(ws, vm_name, ip, description=default_vm_description):
+    """
+    Create a VM with a static IP configuration via Cloud‑Init.
+    """
+    cloud_config_str = generate_cloud_config(ip, vm_name)
     params = {
         "name_label": vm_name,
-        "name_description": vm_description,
+        "name_description": description,
         "template": template_id,
-        # Removed affinityHost for simplicity.
         "VIFs": [
             {
                 "network": network_uuid,
-                # Removed "mac": "auto" to let XO assign a MAC address automatically.
-                "allowedIpv4Addresses": ["192.168.1.100"]
+                "allowedIpv4Addresses": [ ip ]
             }
         ],
         "cloudConfig": cloud_config_str
     }
-    print("Creating VM with static IP configuration...")
+    print(f"Creating VM '{vm_name}' with static IP {ip}...")
     response = await send_rpc(ws, "vm.create", params)
     print("Create VM response:", response)
     if "result" in response:
         return response["result"]
     return None
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="XO CLI to list objects and create VMs with static IP configuration"
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
 
-async def get_all(ws,filter):
-    print("Fetching list of VMs...")
-    response = await send_rpc(ws, "xo.getAllObjects", {"filter": {"type": filter}})
-    if "result" in response:
-        vms = response["result"]
-        table_data = []
-        for vm_id, details in vms.items():
-            name = details.get("name_label", "N/A")
-            table_data.append([vm_id, name])
-        if table_data:
-            print(tabulate(table_data, headers=["VM ID", "Name"], tablefmt="pretty"))
-        else:
-            print("No VMs found.")
-    else:
-        print("Failed to fetch VMs. Response:", response)
+    list_parser = subparsers.add_parser("list", help="List objects by type (e.g., VM, host, network)")
+    list_parser.add_argument("object_type", type=str, help="Type of object to list (e.g., VM, host)")
 
-async def main():
+    team_parser = subparsers.add_parser("create-team", help="Create VMs for teams")
+    team_parser.add_argument("num_teams", type=int, help="Number of teams")
+
+    single_parser = subparsers.add_parser("create-vm", help="Create a single VM")
+    single_parser.add_argument("name", type=str, help="Name for the VM")
+    single_parser.add_argument("ip", type=str, help="Static IP address for the VM")
+    
+    return parser.parse_args()
+
+async def run_cli(args):
     async with aiohttp.ClientSession() as session:
         async with session.ws_connect(XO_WS_URL) as ws:
-            # Sign in to the XO server
             await sign_in(ws)
-            print("\nExisting VMs:")
-            await get_all(ws,"VM")
-            print("\nExisting Host:")
-            await get_all(ws,"host")
 
-
-            # Create the VM with static IP settings
-            vm_id = await create_vm_static(ws)
-            if vm_id:
-                print("VM created with id:", vm_id)
+            if args.command == "list":
+                await get_all(ws, args.object_type)
+            elif args.command == "create-team":
+                num_teams = args.num_teams
+                for team in range(1, num_teams + 1):
+                    for i in range(5):
+                        vm_name = f"CTF-TEAM-{team}-TEST-{i+1}"
+                        ip = f"192.168.{team}.{100 + i}"
+                        vm_id = await create_vm_static(ws, vm_name, ip)
+                        if vm_id:
+                            print(f"Created VM for team {team}: {vm_name} with IP {ip} (ID: {vm_id})")
+                        else:
+                            print(f"Failed to create VM for team {team}: {vm_name} with IP {ip}")
+            elif args.command == "create-vm":
+                vm_id = await create_vm_static(ws, args.name, args.ip)
+                if vm_id:
+                    print(f"Created VM '{args.name}' with IP {args.ip} (ID: {vm_id})")
+                else:
+                    print("VM creation failed.")
             else:
-                print("VM creation failed.")
+                print("Unknown command.")
 
-            print("\nUpdated VM List:")
-            await get_all(ws,"VM")
+def main():
+    args = parse_args()
+    asyncio.run(run_cli(args))
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
