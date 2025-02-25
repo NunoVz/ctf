@@ -4,7 +4,6 @@ import uuid
 import aiohttp
 import re
 
-# Constants
 XO_WS_URL = "ws://xo-cslab.dei.uc.pt/api/"
 USERNAME = "ctf"
 PASSWORD = "cslabctf2024"
@@ -106,14 +105,16 @@ async def process_challenges(config):
             return results
 
 if __name__ == "__main__":
-    # Load JSON config
     with open(CONFIG_FILE, "r") as file:
         config = json.load(file)
 
-    # Process challenges and store results
     result = asyncio.run(process_challenges(config))
     
+    print(result)
+
     with open(OUTPUT_FILE, "w") as file:
         json.dump(result, file, indent=4)
 
-    print("Generated challenge VMs stored in:", OUTPUT_FILE)
+    print("Generated challenge VMs:")
+    print(json.dumps(result, indent=4))
+    print("Results stored in:", OUTPUT_FILE)
