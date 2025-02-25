@@ -1,0 +1,19 @@
+{
+    "subnet_base": "192.168.50",
+    "challenges": [
+        {
+            "name": "Challenge-1",
+            "description": "Ch-2 | Created for Shift CTF! Make the flag (h)appen",
+            "template_uuid": "2efd48d2-b12d-8f3e-56e6-5ed41c02118b",
+            "network_uuid": "ea5aca40-b7d2-b896-5efd-dce07151d4ba",
+            "ip_suffix": 1
+        },
+        {
+            "name": "Challenge-2",
+            "description": "Ch-2| Created for Shift CTF! Make the flag (h)appen",
+            "template_uuid": "2efd48d2-b12d-8f3e-56e6-5ed41c02118b",
+            "network_uuid": "ea5aca40-b7d2-b896-5efd-dce07151d4ba",
+            "ip_suffix": 2
+        }
+    ]
+}
