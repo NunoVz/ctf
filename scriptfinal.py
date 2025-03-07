@@ -85,12 +85,13 @@ async def process_challenges(config):
             new_team_number = max_team_number + 1 
 
             results = []
-            subnet_base = config.get("subnet_base", "192.168.1")
+            subnet_base = config.get("subnet_base", "192.168")
 
             for challenge in config.get("challenges", []):
                 challenge_name = challenge.get("name")
                 vm_name = f"CTF-TEAM-{new_team_number}-{challenge_name}"
-                ip = f"{subnet_base}.{challenge.get('ip_suffix', new_team_number)}"
+                ip_suffix = challenge.get('ip_suffix', 0)  
+                ip = f"{subnet_base}.{ip_suffix}.0"
                 template_uuid = challenge.get("template_uuid")
                 network_uuid = challenge.get("network_uuid")
                 description = challenge.get("description", DEFAULT_VM_DESCRIPTION)
